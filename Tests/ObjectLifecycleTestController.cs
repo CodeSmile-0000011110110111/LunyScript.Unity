@@ -16,21 +16,14 @@ namespace LunyScript.Unity.Tests
 		public Boolean Assert_Runs_EveryFixedStep_Passed;
 		public Boolean Assert_Runs_EveryFrame_Passed;
 		public Boolean Assert_Runs_EveryFrameEnds_Passed;
-		private IVariables _vars;
 
-		private void Awake()
-		{
-			_vars = LunyScriptEngine.Instance.GlobalVariables;
-			_vars.OnVariableChanged += OnVariableChanged;
-		}
-
-		private void OnDestroy() => _vars.OnVariableChanged -= OnVariableChanged;
+		private void Awake() => LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
 
 		private void OnVariableChanged(Object sender, VariableChangedEventArgs e)
 		{
-			Debug.Log($"Test variable changed: {e}");
+			Debug.Log($"{nameof(ObjectLifecycleTestController)}: {e}");
 
-			var pass = e.Variable.AsBoolean();
+			var pass = e.Variable.Boolean();
 			if (e.Name == nameof(Assert_Runs_WhenCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
 			else if (e.Name == nameof(Assert_Runs_WhenDestroyed))
