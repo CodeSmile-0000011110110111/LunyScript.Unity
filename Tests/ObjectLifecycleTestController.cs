@@ -21,7 +21,7 @@ namespace LunyScript.Unity.Tests
 
 		private void OnVariableChanged(Object sender, VariableChangedEventArgs e)
 		{
-			Debug.Log($"{nameof(ObjectLifecycleTestController)}: {e}");
+			Debug.Log($"{e} ({sender})", this);
 
 			var pass = e.Variable.Boolean();
 			if (e.Name == nameof(Assert_Runs_WhenCreated))
