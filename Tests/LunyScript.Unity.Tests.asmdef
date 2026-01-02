@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "LunyScript",
         "LunyScript.Unity",
-        "Luny"
+        "Luny",
+        "LunyScript.Tests"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

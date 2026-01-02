@@ -20,29 +20,29 @@ namespace LunyScript.Unity.Tests
 
 		private void Awake() => LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
 
-		private void OnVariableChanged(Object sender, VariableChangedEventArgs e)
+		private void OnVariableChanged(Object sender, VariableChangedEventArgs changedVar)
 		{
 			//Debug.Log($"{e} ({sender})", this);
 
-			var pass = e.Variable.Boolean();
-			if (e.Name == nameof(Assert_Runs_WhenCreated))
+			var pass = changedVar.Variable.Boolean();
+			if (changedVar.Name == nameof(Assert_Runs_WhenCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_WhenDestroyed))
+			else if (changedVar.Name == nameof(Assert_Runs_WhenDestroyed))
 				Assert_Runs_WhenDestroyed_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_WhenEnabled))
+			else if (changedVar.Name == nameof(Assert_Runs_WhenEnabled))
 				Assert_Runs_WhenEnabled_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_WhenDisabled))
+			else if (changedVar.Name == nameof(Assert_Runs_WhenDisabled))
 				Assert_Runs_WhenDisabled_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_WhenReady))
+			else if (changedVar.Name == nameof(Assert_Runs_WhenReady))
 				Assert_Runs_WhenReady_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_EveryFixedStep))
+			else if (changedVar.Name == nameof(Assert_Runs_EveryFixedStep))
 				Assert_Runs_EveryFixedStep_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_EveryFrame))
+			else if (changedVar.Name == nameof(Assert_Runs_EveryFrame))
 				Assert_Runs_EveryFrame_Passed = pass;
-			else if (e.Name == nameof(Assert_Runs_EveryFrameEnds))
+			else if (changedVar.Name == nameof(Assert_Runs_EveryFrameEnds))
 				Assert_Runs_EveryFrameEnds_Passed = pass;
 			else
-				throw new ArgumentOutOfRangeException(nameof(e.Name));
+				throw new ArgumentOutOfRangeException(nameof(changedVar.Name));
 		}
 	}
 }
