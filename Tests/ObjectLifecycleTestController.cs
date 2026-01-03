@@ -20,13 +20,13 @@ namespace LunyScript.Unity.Tests
 
 		private void Awake()
 		{
-			LunyLogger.LogWarning("AWAKE", this);
+			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
 			LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
 		}
 
-		private void OnEnable() => LunyLogger.LogWarning("ONENABLE", this);
-
-		private void Start() => LunyLogger.LogWarning("START", this);
+		// private void OnEnable() => LunyLogger.LogWarning($"ONENABLE: Frame {Time.frameCount}", this);
+		// private void Start() => LunyLogger.LogWarning($"START: Frame {Time.frameCount}", this);
+		// private void Update() => LunyLogger.LogWarning($"UPDATE: Frame {Time.frameCount}", this);
 
 		private void OnDestroy()
 		{
