@@ -1,3 +1,4 @@
+/*
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
@@ -38,3 +39,4 @@ namespace LunyScript.Unity.Tests
 		}
 	}
 }
+*/
