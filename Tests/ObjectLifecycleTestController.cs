@@ -17,11 +17,9 @@ namespace LunyScript.Unity.Tests
 		public Boolean Assert_Runs_EveryFrame_Passed;
 		public Boolean Assert_Runs_EveryFrameEnds_Passed;
 
-		private void Awake()
-		{
+		private void Awake() =>
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
 			LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
-		}
 
 		// private void OnEnable() => LunyLogger.LogWarning($"ONENABLE: Frame {Time.frameCount}", this);
 		// private void Start() => LunyLogger.LogWarning($"START: Frame {Time.frameCount}", this);
