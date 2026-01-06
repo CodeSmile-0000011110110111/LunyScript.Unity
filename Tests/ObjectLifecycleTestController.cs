@@ -1,6 +1,8 @@
 using LunyScript.Tests;
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = System.Object;
 
 namespace LunyScript.Unity.Tests
@@ -17,6 +19,18 @@ namespace LunyScript.Unity.Tests
 		public Boolean Assert_Runs_EveryFrame_Passed;
 		public Boolean Assert_Runs_EveryFrameEnds_Passed;
 
+		[Header("Debug")]
+		public Boolean ReloadScene;
+
+		private void OnValidate()
+		{
+			if (ReloadScene && gameObject.activeInHierarchy && enabled)
+			{
+				ReloadScene = false;
+				StartCoroutine(ReloadSceneNextFrame());
+			}
+		}
+
 		private void Awake() =>
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
 			LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
@@ -32,11 +46,18 @@ namespace LunyScript.Unity.Tests
 				scriptEngine.GlobalVariables.OnVariableChanged -= OnVariableChanged;
 		}
 
-		private void OnVariableChanged(Object sender, VariableChangedEventArgs changedVar)
+		private IEnumerator ReloadSceneNextFrame()
+		{
+			yield return null;
+
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+		}
+
+		private void OnVariableChanged(Object sender, LunyScriptVariableChangedArgs changedVar)
 		{
 			//Debug.Log($"{e} ({sender})", this);
 
-			var pass = changedVar.Variable.Boolean();
+			var pass = changedVar.LunyScriptVariable.Boolean();
 			if (changedVar.Name == nameof(Assert_Runs_WhenCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
 			else if (changedVar.Name == nameof(Assert_Runs_WhenDestroyed))
