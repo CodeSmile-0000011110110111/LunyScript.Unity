@@ -31,9 +31,13 @@ namespace LunyScript.Unity.Tests
 			}
 		}
 
-		private void Awake() =>
+		private void Awake()
+		{
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
-			LunyScriptEngine.Instance.GlobalVariables.OnVariableChanged += OnVariableChanged;
+			var globalVars = LunyScriptEngine.Instance.GlobalVariables;
+			globalVars.Clear();
+			globalVars.OnVariableChanged += OnVariableChanged;
+		}
 
 		// private void OnEnable() => LunyLogger.LogWarning($"ONENABLE: Frame {Time.frameCount}", this);
 		// private void Start() => LunyLogger.LogWarning($"START: Frame {Time.frameCount}", this);
