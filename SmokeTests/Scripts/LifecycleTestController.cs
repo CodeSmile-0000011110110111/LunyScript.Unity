@@ -31,6 +31,7 @@ namespace LunyScript.Unity.SmokeTests
 			}
 		}
 
+#pragma warning disable 0114 // hides inherited member
 		private void Awake()
 		{
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
@@ -49,6 +50,7 @@ namespace LunyScript.Unity.SmokeTests
 			if (scriptEngine != null)
 				scriptEngine.GlobalVars.OnVariableChanged -= OnVariableChanged;
 		}
+#pragma warning restore 0114 // hides inherited member
 
 		private IEnumerator ReloadSceneNextFrame()
 		{
