@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunyScript.SmokeTests;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
