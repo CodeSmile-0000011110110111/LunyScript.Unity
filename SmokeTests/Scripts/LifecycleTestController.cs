@@ -1,3 +1,4 @@
+using Luny;
 using LunyScript.SmokeTests;
 using System;
 using System.Collections;
@@ -38,11 +39,11 @@ namespace LunyScript.Unity.SmokeTests
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 
-		private void OnVariableChanged(Object sender, LunyScriptVariableChangedArgs changedVar)
+		private void OnVariableChanged(Object sender, VariableChangedArgs changedVar)
 		{
 			//Debug.Log($"{e} ({sender})", this);
 
-			var pass = changedVar.Variable.AsBoolean();
+			var pass = changedVar.Current.AsBoolean();
 			if (changedVar.Name == nameof(Assert_Runs_WhenCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
 			else if (changedVar.Name == nameof(Assert_Runs_WhenDestroyed))
