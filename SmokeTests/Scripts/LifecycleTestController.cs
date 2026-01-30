@@ -1,4 +1,5 @@
 using Luny;
+using Luny.Engine;
 using LunyScript.SmokeTests;
 using System;
 using System.Collections;
