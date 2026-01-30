@@ -69,7 +69,7 @@ namespace LunyScript.Unity.SmokeTests
 		{
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
 			var globalVars = LunyScriptEngine.Instance.GlobalVars;
-			globalVars.Clear();
+			globalVars.RemoveAll();
 			globalVars.OnVariableChanged += OnVariableChanged;
 		}
 
