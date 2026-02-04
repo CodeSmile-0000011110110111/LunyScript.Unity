@@ -69,7 +69,7 @@ namespace LunyScript.Unity.SmokeTests
 		private void Awake()
 		{
 			// LunyLogger.LogWarning($"AWAKE: Frame {Time.frameCount}", this);
-			var globalVars = LunyScriptEngine.Instance.GlobalVars;
+			var globalVars = LunyScriptEngine.Instance.GlobalVariables;
 			globalVars.RemoveAll();
 			globalVars.OnVariableChanged += OnVariableChanged;
 		}
@@ -82,7 +82,7 @@ namespace LunyScript.Unity.SmokeTests
 		{
 			var scriptEngine = LunyScriptEngine.Instance;
 			if (scriptEngine != null)
-				scriptEngine.GlobalVars.OnVariableChanged -= OnVariableChanged;
+				scriptEngine.GlobalVariables.OnVariableChanged -= OnVariableChanged;
 		}
 #pragma warning restore 0114 // hides inherited member
 	}
