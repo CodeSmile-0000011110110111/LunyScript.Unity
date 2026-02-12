@@ -17,13 +17,13 @@ namespace LunyScript.Unity.SmokeTests
 
 		private void Awake()
 		{
-			new GameObject(nameof(ObjectTestLunyScript)); // this causes the corresponding LunyScript to build & run
+			new GameObject(nameof(ObjectTestScript)); // this causes the corresponding LunyScript to build & run
 			StartCoroutine(AssertAtEndOfFrame());
 		}
 
 		private void Start()
 		{
-			var toBeDestroyed = GameObject.Find(ObjectTestLunyScript.DestroyedObjectName);
+			var toBeDestroyed = GameObject.Find(ObjectTestScript.DestroyedObjectName);
 			_foundToBeDestroyedObject = toBeDestroyed != null;
 		}
 
@@ -35,12 +35,12 @@ namespace LunyScript.Unity.SmokeTests
 			foreach (var rootObject in rootObjects)
 			{
 				var goName = rootObject.name;
-				_EmptyObjectCreated = _EmptyObjectCreated || goName == ObjectTestLunyScript.EmptyObjectName;
-				_CubeObjectCreated = _CubeObjectCreated || goName == ObjectTestLunyScript.CubeObjectName;
-				_SphereObjectCreated = _SphereObjectCreated || goName == ObjectTestLunyScript.SphereObjectName;
+				_EmptyObjectCreated = _EmptyObjectCreated || goName == ObjectTestScript.EmptyObjectName;
+				_CubeObjectCreated = _CubeObjectCreated || goName == ObjectTestScript.CubeObjectName;
+				_SphereObjectCreated = _SphereObjectCreated || goName == ObjectTestScript.SphereObjectName;
 			}
 
-			_ObjectCreatedAndDestroyed = _foundToBeDestroyedObject && GameObject.Find(ObjectTestLunyScript.DestroyedObjectName) == null;
+			_ObjectCreatedAndDestroyed = _foundToBeDestroyedObject && GameObject.Find(ObjectTestScript.DestroyedObjectName) == null;
 		}
 
 		private IEnumerator AssertAtEndOfFrame()

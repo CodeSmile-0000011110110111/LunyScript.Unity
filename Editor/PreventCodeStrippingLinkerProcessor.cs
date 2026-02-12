@@ -1,5 +1,4 @@
 ﻿using Luny.UnityEditor.Linking;
-using LunyScript.Execution;
 using System;
 
 namespace LunyScript.UnityEditor
@@ -9,11 +8,11 @@ namespace LunyScript.UnityEditor
 		public override PreserveDetails[] GetPreserveDetails()
 		{
 			// preserve all user scripts across assemblies (any scripts in Editor assemblies will not be in build)
-			var details = PreserveAllDerivedClasses<LunyScript>();
+			var details = PreserveAllDerivedClasses<Script>();
 
 			details.Add(new PreserveDetails
 			{
-				Assembly = nameof(LunyScript),
+				Assembly = nameof(Script),
 				Types = new[]
 				{
 					// script runner is discovered through reflection
@@ -24,6 +23,6 @@ namespace LunyScript.UnityEditor
 			return details.ToArray();
 		}
 
-		public override String GetAssemblyName() => $"{nameof(LunyScript)}.Unity";
+		public override String GetAssemblyName() => $"{nameof(Script)}.Unity";
 	}
 }
