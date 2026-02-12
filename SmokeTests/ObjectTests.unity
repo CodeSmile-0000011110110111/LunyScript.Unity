@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 72129508}
   - component: {fileID: 72129507}
   m_Layer: 0
-  m_Name: TestController
+  m_Name: ObjectTestController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

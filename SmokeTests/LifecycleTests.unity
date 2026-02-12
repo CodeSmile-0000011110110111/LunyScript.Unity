@@ -256,7 +256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 189047149}
   m_Layer: 0
-  m_Name: Assert_Runs_WhenDisabled
+  m_Name: Assert_Runs_OnDisabled
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,7 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 248745853}
   m_Layer: 0
-  m_Name: Assert_Runs_EveryFrame
+  m_Name: Assert_Runs_OnFrameUpdate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,7 +318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 571450410}
   m_Layer: 0
-  m_Name: Assert_Runs_WhenEnabled
+  m_Name: Assert_Runs_OnEnabled
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -349,7 +349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 756101075}
   m_Layer: 0
-  m_Name: Assert_Runs_WhenReady
+  m_Name: Assert_Runs_OnReady
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -517,7 +517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 932249769}
   m_Layer: 0
-  m_Name: Assert_Runs_WhenDestroyed
+  m_Name: Assert_Runs_OnDestroyed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -590,6 +590,7 @@ MonoBehaviour:
   Assert_Runs_EveryFixedStep_Passed: 0
   Assert_Runs_EveryFrame_Passed: 0
   Assert_Runs_EveryFrameEnds_Passed: 0
+  ReloadScene: 0
 --- !u!1 &1381106244
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1381106245}
   m_Layer: 0
-  m_Name: Assert_Runs_EveryFixedStep
+  m_Name: Assert_Runs_OnHeartbeat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -631,7 +632,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1987703168}
   m_Layer: 0
-  m_Name: Assert_Runs_EveryFrameEnds
+  m_Name: Assert_Runs_OnFrameLateUpdate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -662,7 +663,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122080402}
   m_Layer: 0
-  m_Name: Assert_Runs_WhenCreated
+  m_Name: Assert_Runs_OnCreated
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

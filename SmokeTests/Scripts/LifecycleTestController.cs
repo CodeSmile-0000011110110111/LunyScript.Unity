@@ -41,7 +41,10 @@ namespace LunyScript.Unity.SmokeTests
 
 		private void OnVariableChanged(Object sender, VariableChangedArgs changedVar)
 		{
-			//Debug.Log($"{e} ({sender})", this);
+			if (changedVar.Name.StartsWith("Time."))
+				return;
+
+			LunyLogger.LogInfo($"{changedVar}", this);
 
 			var pass = changedVar.Current.AsBoolean();
 			if (changedVar.Name == nameof(Assert_Runs_OnCreated))
@@ -61,7 +64,7 @@ namespace LunyScript.Unity.SmokeTests
 			else if (changedVar.Name == nameof(Assert_Runs_OnFrameLateUpdate))
 				Assert_Runs_EveryFrameEnds_Passed = pass;
 			else
-				throw new ArgumentOutOfRangeException(nameof(changedVar.Name));
+				LunyLogger.LogWarning($"unhandled {changedVar}", this);
 		}
 
 #pragma warning disable 0114 // hides inherited member
