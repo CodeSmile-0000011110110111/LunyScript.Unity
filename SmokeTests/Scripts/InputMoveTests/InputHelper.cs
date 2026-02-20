@@ -21,8 +21,10 @@ namespace LunyScript.Unity.SmokeTests.InputMoveTests
 			var y = keyboard.wKey.ReadValue() - keyboard.sKey.ReadValue();
 			var input = new Vector2(x, y);
 			return input.normalized;
-#else
+#elif UNITY_6000_OR_NEWER
 			return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+#else
+			return Vector2.zero;
 #endif
 		}
 
@@ -33,8 +35,10 @@ namespace LunyScript.Unity.SmokeTests.InputMoveTests
 		{
 #if ENABLE_INPUT_SYSTEM
 			return Keyboard.current.spaceKey.isPressed;
-#else
+#elif UNITY_6000_OR_NEWER
 			return Input.GetKey(KeyCode.Space);
+#else
+			return false;
 #endif
 		}
 
@@ -42,8 +46,10 @@ namespace LunyScript.Unity.SmokeTests.InputMoveTests
 		{
 #if ENABLE_INPUT_SYSTEM
 			return Keyboard.current.cKey.isPressed;
-#else
+#elif UNITY_6000_OR_NEWER
 			return Input.GetKey(KeyCode.C);
+#else
+			return false;
 #endif
 		}
 	}
