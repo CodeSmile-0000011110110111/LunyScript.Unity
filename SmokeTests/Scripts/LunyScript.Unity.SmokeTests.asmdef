@@ -7,7 +7,8 @@
         "LunyScript",
         "LunyScript.Unity",
         "Luny",
-        "LunyScript.SmokeTests"
+        "LunyScript.SmokeTests",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,0 +1,50 @@
+﻿using System;
+using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+
+namespace LunyScript.Unity.SmokeTests.InputMoveTests
+{
+	public static class InputHelper
+	{
+		public static Vector2 GetMovementInput()
+		{
+#if ENABLE_INPUT_SYSTEM
+			// You shouldn't write Input System code like this.
+			// I only do so to avoid setting up input actions.
+			var keyboard = Keyboard.current;
+			if (keyboard == null)
+				return Vector2.zero;
+
+			var x = keyboard.dKey.ReadValue() - keyboard.aKey.ReadValue();
+			var y = keyboard.wKey.ReadValue() - keyboard.sKey.ReadValue();
+			var input = new Vector2(x, y);
+			return input.normalized;
+#else
+			return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+#endif
+		}
+
+		public static Single GetHorizontalInput() => GetMovementInput().x;
+		public static Single GetVerticalInput() => GetMovementInput().y;
+
+		public static Boolean GetUpKeyPressed()
+		{
+#if ENABLE_INPUT_SYSTEM
+			return Keyboard.current.spaceKey.isPressed;
+#else
+			return Input.GetKey(KeyCode.Space);
+#endif
+		}
+
+		public static Boolean GetDownKeyPressed()
+		{
+#if ENABLE_INPUT_SYSTEM
+			return Keyboard.current.cKey.isPressed;
+#else
+			return Input.GetKey(KeyCode.C);
+#endif
+		}
+	}
+}
