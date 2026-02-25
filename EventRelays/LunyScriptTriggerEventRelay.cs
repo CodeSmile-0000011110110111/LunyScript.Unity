@@ -1,3 +1,4 @@
+﻿using Luny.Engine.Bridge.Physics;
 using UnityEngine;
 
 namespace LunyScript.Unity.EventRelays
@@ -7,8 +8,24 @@ namespace LunyScript.Unity.EventRelays
 	[RequireComponent(typeof(Collider))]
 	internal sealed class LunyScriptTriggerEventRelay : MonoBehaviourEventRelay
 	{
-		private void OnTriggerEnter(Collider other) {}
-		private void OnTriggerStay(Collider other) {}
-		private void OnTriggerExit(Collider other) {}
+		private LunyCollider _collider = new();
+
+		private void OnTriggerEnter(Collider other)
+		{
+			_collider.NativeObject = other;
+			_lunyObject.InvokeOnTriggerEntered(_collider);
+		}
+
+		private void OnTriggerStay(Collider other)
+		{
+			_collider.NativeObject = other;
+			_lunyObject.InvokeOnTriggering(_collider);
+		}
+
+		private void OnTriggerExit(Collider other)
+		{
+			_collider.NativeObject = other;
+			_lunyObject.InvokeOnTriggerExited(_collider);
+		}
 	}
 }
