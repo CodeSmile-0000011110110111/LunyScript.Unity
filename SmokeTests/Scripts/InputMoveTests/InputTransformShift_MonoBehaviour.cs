@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LunyScript.Unity.SmokeTests.InputMoveTests
+namespace LunyScript.SmokeTests.InputMoveTests
 {
 	/// <summary>
 	/// Typical Unity tutorial script implementing a 3-way world-axis-aligned motion

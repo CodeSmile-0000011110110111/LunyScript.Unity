@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace LunyScript.Unity.SmokeTests
+namespace LunyScript.SmokeTests
 {
 	public sealed class ObjectTestController : MonoBehaviour
 	{

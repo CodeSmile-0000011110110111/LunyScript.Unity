@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
 
-namespace LunyScript.Unity.SmokeTests.InputMoveTests
+namespace LunyScript.SmokeTests.InputMoveTests
 {
 	public static class InputHelper
 	{

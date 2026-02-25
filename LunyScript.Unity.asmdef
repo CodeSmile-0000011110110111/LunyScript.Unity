@@ -3,6 +3,7 @@
     "rootNamespace": "LunyScript.Unity",
     "references": [
         "GUID:d8105533248dd994a834ff6858cf7898",
+        "GUID:04220f546f37c3844b2def871a4913e7",
         "GUID:d3eaacbbd31dbfe4bbd3a9bce5c65632"
     ],
     "includePlatforms": [],

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = System.Object;
 
-namespace LunyScript.Unity.SmokeTests
+namespace LunyScript.SmokeTests
 {
 	public sealed class LifecycleTestController : MonoBehaviour
 	{

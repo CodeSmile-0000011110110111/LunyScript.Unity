@@ -2,7 +2,7 @@ using LunyScript.Api;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript
+namespace LunyScript.Unity
 {
 	public static class ComponentApiExtensions
 	{

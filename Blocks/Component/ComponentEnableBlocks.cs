@@ -1,7 +1,8 @@
-﻿using System;
+﻿using LunyScript.Blocks;
+using System;
 using UnityEngine;
 
-namespace LunyScript.Blocks
+namespace LunyScript.Unity
 {
 	internal sealed class ComponentEnableBlock : ScriptActionBlock
 	{
