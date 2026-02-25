@@ -9,25 +9,29 @@ namespace LunyScript.Blocks
 
 		public static ScriptActionBlock Create(Type componentType) => new ComponentEnableBlock(componentType);
 
-		internal static void SetComponentEnabled(Component component, Boolean enabled)
+		internal static void SetComponentEnabled(GameObject go, Type componentType, Boolean enabled)
 		{
-			switch (component)
+			var components = go.GetComponentsInChildren(componentType);
+			foreach (var component in components)
 			{
-				case Behaviour behaviour:
-					behaviour.enabled = enabled;
-					break;
-				case Collider collider:
-					collider.enabled = enabled;
-					break;
-				case Renderer renderer:
-					renderer.enabled = enabled;
-					break;
-				case LODGroup lodGroup:
-					lodGroup.enabled = enabled;
-					break;
-				case Cloth cloth:
-					cloth.enabled = enabled;
-					break;
+				switch (component)
+				{
+					case Behaviour behaviour:
+						behaviour.enabled = enabled;
+						break;
+					case Collider collider:
+						collider.enabled = enabled;
+						break;
+					case Renderer renderer:
+						renderer.enabled = enabled;
+						break;
+					case LODGroup lodGroup:
+						lodGroup.enabled = enabled;
+						break;
+					case Cloth cloth:
+						cloth.enabled = enabled;
+						break;
+				}
 			}
 		}
 
@@ -38,8 +42,7 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			var go = runtimeContext.LunyObject.Cast<GameObject>();
-			var component = go.GetComponent(_componentType);
-			SetComponentEnabled(component, true);
+			SetComponentEnabled(go, _componentType, true);
 		}
 
 		public override String ToString() => $"{nameof(ComponentEnableBlock)}({_componentType?.Name})";
@@ -58,8 +61,7 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			var go = runtimeContext.LunyObject.Cast<GameObject>();
-			var component = go.GetComponent(_componentType);
-			ComponentEnableBlock.SetComponentEnabled(component, false);
+			ComponentEnableBlock.SetComponentEnabled(go, _componentType, false);
 		}
 
 		public override String ToString() => $"{nameof(ComponentDisableBlock)}({_componentType?.Name})";
