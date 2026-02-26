@@ -5,6 +5,7 @@ namespace LunyScript.Unity.EventRelays
 {
 	internal abstract class MonoBehaviourEventRelay : MonoBehaviour
 	{
+		protected ScriptRuntimeContext _runtimeContext;
 		protected LunyObject _lunyObject;
 
 		internal void Initialize(ScriptRuntimeContext runtimeContext)

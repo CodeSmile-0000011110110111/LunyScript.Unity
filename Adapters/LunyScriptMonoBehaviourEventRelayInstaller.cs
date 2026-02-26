@@ -1,5 +1,5 @@
-﻿using Luny;
-using Luny.Engine.Bridge;
+﻿using Luny.Engine.Bridge;
+using Luny.Engine.Bridge.Physics;
 using LunyScript.Unity.EventRelays;
 using UnityEngine;
 
@@ -30,10 +30,7 @@ namespace LunyScript.Unity.Adapters
 
 			GameObject gameObject = null;
 			if (hasCollisionEvents || hasTriggerEvents || hasCollision2DEvents || hasTrigger2DEvents)
-			{
-				LunyLogger.LogWarning($"Installing Physics Event Relay for {runtimeContext}");
 				gameObject = (GameObject)runtimeContext.LunyObject.NativeObject;
-			}
 
 			if (hasCollisionEvents)
 				gameObject.AddComponent<LunyScriptCollisionEventRelay>().Initialize(runtimeContext);

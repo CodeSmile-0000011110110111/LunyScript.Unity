@@ -19,7 +19,7 @@ namespace LunyScript.Unity.EventRelays
 		private void OnTriggerStay(Collider other)
 		{
 			_collider.NativeObject = other;
-			_lunyObject.InvokeOnTriggering(_collider);
+			_lunyObject.InvokeOnTriggerUpdate(_collider);
 		}
 
 		private void OnTriggerExit(Collider other)

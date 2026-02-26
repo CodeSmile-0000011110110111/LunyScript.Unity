@@ -1,5 +1,5 @@
 using Luny;
-using Luny.Engine.Bridge.Physics;
+using Luny.Unity.Engine.Bridge.Physics;
 using UnityEngine;
 
 namespace LunyScript.Unity.EventRelays
@@ -8,7 +8,7 @@ namespace LunyScript.Unity.EventRelays
 	[AddComponentMenu("GameObject/")] // hide component from user interface
 	internal sealed class LunyScriptCollisionEventRelay : MonoBehaviourEventRelay
 	{
-		private LunyCollision _collision = new();
+		private UnityCollision _collision = new();
 
 #if UNITY_EDITOR
 		private void Awake()
@@ -36,7 +36,7 @@ namespace LunyScript.Unity.EventRelays
 			}
 			else
 			{
-				LunyLogger.LogWarning($"Collision events in script but object has no Collider. Will add default collider.", _lunyObject);
+				LunyLogger.LogWarning("Collision events in script but object has no Collider. Will add default collider.", _lunyObject);
 				gameObject.AddComponent<SphereCollider>();
 			}
 		}
@@ -45,19 +45,19 @@ namespace LunyScript.Unity.EventRelays
 		private void OnCollisionEnter(Collision other)
 		{
 			_collision.NativeObject = other;
-			_lunyObject.InvokeOnCollisionStarted(_collision);
+			_lunyObject.InvokeOnCollisionEntered(_collision);
 		}
 
 		private void OnCollisionExit(Collision other)
 		{
 			_collision.NativeObject = other;
-			_lunyObject.InvokeOnCollisionEnded(_collision);
+			_lunyObject.InvokeOnCollisionExited(_collision);
 		}
 
 		private void OnCollisionStay(Collision other)
 		{
 			_collision.NativeObject = other;
-			_lunyObject.InvokeOnColliding(_collision);
+			_lunyObject.InvokeOnCollisionUpdate(_collision);
 		}
 	}
 }
