@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LunyScript.Unity.EventRelays
@@ -7,6 +8,8 @@ namespace LunyScript.Unity.EventRelays
 	[RequireComponent(typeof(Collider2D))]
 	internal sealed class LunyScriptTrigger2DEventRelay : MonoBehaviourEventRelay
 	{
+		private void Awake() => throw new NotImplementedException(nameof(LunyScriptTrigger2DEventRelay));
+
 		private void OnTriggerEnter2D(Collider2D other) {}
 		private void OnTriggerStay2D(Collider2D other) {}
 		private void OnTriggerExit2D(Collider2D other) {}

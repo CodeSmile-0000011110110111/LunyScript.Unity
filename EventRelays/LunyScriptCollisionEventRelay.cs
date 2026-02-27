@@ -14,50 +14,43 @@ namespace LunyScript.Unity.EventRelays
 		private void Awake()
 		{
 			if (!TryGetComponent<Rigidbody>(out var rigidbody))
-			{
-				// Technically, the *other* object could have the RB, but it usually needs its own.
-				LunyLogger.LogWarning("Collision events in script but object has no Rigidbody. Collision events will only run " +
-				                      "if the colliding object has a Rigidbody.", _lunyObject);
-			}
+				LunyLogger.LogWarning($"{name} w/o Rigidbody: On.Collision events run only when contact object has a Rigidbody.", _lunyObject);
 
 			if (TryGetComponent<Collider>(out var collider))
 			{
 				if (collider.isTrigger)
-				{
-					LunyLogger.LogWarning("Collision events in script but object's Collider has IsTrigger set. " +
-					                      "Disregard this message if IsTrigger is set at runtime.", _lunyObject);
-				}
+					LunyLogger.LogWarning($"{name}'s Collider has IsTrigger set: On.Collision events will not run!", _lunyObject);
 
 				if (collider is MeshCollider meshCol && !meshCol.convex && rigidbody != null && !rigidbody.isKinematic)
 				{
-					LunyLogger.LogWarning("Collision events in script but object has a non-kinematic Rigidbody with a MeshCollider " +
-					                      "which is not set to be 'Convex'!", _lunyObject);
+					LunyLogger.LogWarning($"{name} has a non-kinematic Rigidbody with a MeshCollider whose 'Convex' property is NOT set: " +
+					                      "On.Collision events will not run!", _lunyObject);
 				}
 			}
 			else
-			{
-				LunyLogger.LogWarning("Collision events in script but object has no Collider. Will add default collider.", _lunyObject);
-				gameObject.AddComponent<SphereCollider>();
-			}
+				LunyLogger.LogWarning($"{name} has no Collider: On.Collision events will not run!", _lunyObject);
 		}
 #endif
 
 		private void OnCollisionEnter(Collision other)
 		{
-			_collision.NativeObject = other;
+			_collision.SetNativeObject(other);
 			_lunyObject.InvokeOnCollisionEntered(_collision);
+			_collision.SetNativeObject(null);
 		}
 
 		private void OnCollisionExit(Collision other)
 		{
-			_collision.NativeObject = other;
+			_collision.SetNativeObject(other);
 			_lunyObject.InvokeOnCollisionExited(_collision);
+			_collision.SetNativeObject(null);
 		}
 
 		private void OnCollisionStay(Collision other)
 		{
-			_collision.NativeObject = other;
+			_collision.SetNativeObject(other);
 			_lunyObject.InvokeOnCollisionUpdate(_collision);
+			_collision.SetNativeObject(null);
 		}
 	}
 }
