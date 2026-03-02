@@ -1,4 +1,5 @@
 ﻿using Luny.Unity.Engine.Bridge.Physics;
+using System;
 using UnityEngine;
 
 namespace LunyScript.Unity.EventRelays
@@ -17,17 +18,17 @@ namespace LunyScript.Unity.EventRelays
 			_collider.SetNativeObject(null);
 		}
 
-		private void OnTriggerStay(Collider other)
-		{
-			_collider.SetNativeObject(other);
-			_lunyObject.InvokeOnTriggerUpdate(_collider);
-			_collider.SetNativeObject(null);
-		}
-
 		private void OnTriggerExit(Collider other)
 		{
 			_collider.SetNativeObject(other);
 			_lunyObject.InvokeOnTriggerExited(_collider);
+			_collider.SetNativeObject(null);
+		}
+
+		private void OnTriggerStay(Collider other)
+		{
+			_collider.SetNativeObject(other);
+			_lunyObject.InvokeOnTriggerUpdate(_collider);
 			_collider.SetNativeObject(null);
 		}
 	}
