@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 63013492}
   - component: {fileID: 63013491}
   - component: {fileID: 63013490}
+  - component: {fileID: 63013494}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -226,11 +227,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 2, z: 3}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &63013494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63013489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9379241aaec048c8a339e2f4f30af15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity.SmokeTests::LunyScript.ChangeMaterialWhileColliding
+  CollisionMaterial: {fileID: 0}
+  TriggerMaterial: {fileID: 2100000, guid: a91b1eb9d76b4f845aa707047aed2bc2, type: 2}
 --- !u!1 &90019452
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 90019452}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -622,6 +637,7 @@ GameObject:
   - component: {fileID: 1334619863}
   - component: {fileID: 1334619865}
   - component: {fileID: 1334619864}
+  - component: {fileID: 1334619866}
   m_Layer: 0
   m_Name: TriggerEvents
   m_TagString: Untagged
@@ -716,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 1334619858}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1, z: 0}
+  m_LocalPosition: {x: 2, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -730,8 +746,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334619858}
   serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
+  m_Mass: 5
+  m_LinearDamping: 0.7
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -756,7 +772,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334619858}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87d773dc813856146818fe6b6fc79dc3, type: 3}
   m_Name: 
@@ -782,6 +798,19 @@ MonoBehaviour:
     Physics/Settings/GameObject
     => Generate On Trigger Stay Events'
   Kind: 2
+--- !u!114 &1334619866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334619858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dab44e50ad35ff4e9f07667973a71ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity.SmokeTests::LunyScript.ChangeMaterialWhenRigidbodySleeps
+  _rigidbodySleepsMaterial: {fileID: 2100000, guid: 357b8a41cd74d9247b5e59b1efda22de, type: 2}
 --- !u!1 &1432028824
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +825,7 @@ GameObject:
   - component: {fileID: 1432028826}
   - component: {fileID: 1432028825}
   - component: {fileID: 1432028830}
+  - component: {fileID: 1432028831}
   m_Layer: 0
   m_Name: CollisionEvents
   m_TagString: Untagged
@@ -812,7 +842,7 @@ Rigidbody:
   m_GameObject: {fileID: 1432028824}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0.75
+  m_LinearDamping: 0.7
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -917,7 +947,7 @@ Transform:
   m_GameObject: {fileID: 1432028824}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 2, z: 0}
+  m_LocalPosition: {x: -2, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -930,7 +960,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1432028824}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87d773dc813856146818fe6b6fc79dc3, type: 3}
   m_Name: 
@@ -938,6 +968,19 @@ MonoBehaviour:
   LogTriggerEvents: 0
   LogCollisionEvents: 1
   LogStayEvents: 1
+--- !u!114 &1432028831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432028824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dab44e50ad35ff4e9f07667973a71ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity.SmokeTests::LunyScript.ChangeMaterialWhenRigidbodySleeps
+  _rigidbodySleepsMaterial: {fileID: 2100000, guid: 357b8a41cd74d9247b5e59b1efda22de, type: 2}
 --- !u!1 &2108441154
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +993,7 @@ GameObject:
   - component: {fileID: 2108441157}
   - component: {fileID: 2108441156}
   - component: {fileID: 2108441155}
+  - component: {fileID: 2108441159}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -1045,11 +1089,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 2, z: 3}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2108441159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108441154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9379241aaec048c8a339e2f4f30af15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity.SmokeTests::LunyScript.ChangeMaterialWhileColliding
+  CollisionMaterial: {fileID: 2100000, guid: 315653a723069d44fa7fcf605d14e31a, type: 2}
+  TriggerMaterial: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,0 +1,38 @@
+using System;
+using UnityEngine;
+
+namespace LunyScript
+{
+	[RequireComponent(typeof(Rigidbody), typeof(Renderer))]
+	public sealed class ChangeMaterialWhenRigidbodySleeps : MonoBehaviour
+	{
+		[SerializeField] private Material _rigidbodySleepsMaterial;
+
+		private Material _originalMaterial;
+		private Rigidbody _rigidbody;
+		private Renderer _renderer;
+		private Boolean _isSleeping;
+
+		private void Awake()
+		{
+			if (_rigidbodySleepsMaterial == null)
+				throw new MissingReferenceException("no sleeping material assigned");
+
+			_rigidbody = GetComponent<Rigidbody>();
+			_renderer = GetComponent<Renderer>();
+			_originalMaterial = _renderer.sharedMaterial;
+		}
+
+		private void OnEnable() => _isSleeping = _rigidbody.IsSleeping();
+
+		private void Update()
+		{
+			var isSleepingNow = _rigidbody.IsSleeping();
+			if (isSleepingNow != _isSleeping)
+			{
+				_isSleeping = isSleepingNow;
+				_renderer.sharedMaterial = isSleepingNow ? _rigidbodySleepsMaterial : _originalMaterial;
+			}
+		}
+	}
+}
