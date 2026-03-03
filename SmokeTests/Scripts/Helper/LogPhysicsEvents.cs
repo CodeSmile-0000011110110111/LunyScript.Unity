@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace LunyScript
 {
+	[DisallowMultipleComponent]
+	[RequireComponent(typeof(Collider))]
 	public sealed class PhysicsEventLogger : MonoBehaviour
 	{
 		public Boolean LogTriggerEvents = true;

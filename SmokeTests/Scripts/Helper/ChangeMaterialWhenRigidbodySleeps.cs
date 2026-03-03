@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace LunyScript
 {
+	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Rigidbody), typeof(Renderer))]
 	public sealed class ChangeMaterialWhenRigidbodySleeps : MonoBehaviour
 	{
@@ -21,17 +23,24 @@ namespace LunyScript
 			_rigidbody = GetComponent<Rigidbody>();
 			_renderer = GetComponent<Renderer>();
 			_originalMaterial = _renderer.sharedMaterial;
+
+			StartCoroutine(AfterFixedUpdate());
 		}
 
 		private void OnEnable() => _isSleeping = _rigidbody.IsSleeping();
 
-		private void Update()
+		private IEnumerator AfterFixedUpdate()
 		{
-			var isSleepingNow = _rigidbody.IsSleeping();
-			if (isSleepingNow != _isSleeping)
+			while (true)
 			{
-				_isSleeping = isSleepingNow;
-				_renderer.sharedMaterial = isSleepingNow ? _rigidbodySleepsMaterial : _originalMaterial;
+				yield return new WaitForFixedUpdate();
+
+				var isSleepingNow = _rigidbody.IsSleeping();
+				if (isSleepingNow != _isSleeping)
+				{
+					_isSleeping = isSleepingNow;
+					_renderer.sharedMaterial = isSleepingNow ? _rigidbodySleepsMaterial : _originalMaterial;
+				}
 			}
 		}
 	}

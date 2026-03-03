@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace LunyScript
 {
+	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Renderer))]
-	public sealed class ChangeMaterialWhileColliding : MonoBehaviour
+	public sealed class ChangeMaterialOnContact : MonoBehaviour
 	{
 		public Material CollisionMaterial;
 		public Material TriggerMaterial;
