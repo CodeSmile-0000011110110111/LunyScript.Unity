@@ -9,27 +9,27 @@ namespace LunyScript.Unity.EventRelays
 	[RequireComponent(typeof(Collider))]
 	internal sealed class LunyScriptTriggerEventRelay : MonoBehaviourEventRelay
 	{
-		private UnityCollider _collider = new();
+		private UnityCollider _otherCollider = new();
 
 		private void OnTriggerEnter(Collider other)
 		{
-			_collider.SetNativeObject(other);
-			_lunyObject.InvokeOnTriggerEntered(_collider);
-			_collider.SetNativeObject(null);
+			_otherCollider.SetNativeCollider(other);
+			_lunyObject.InvokeOnTriggerEntered(_otherCollider);
+			_otherCollider.SetNativeCollider(null);
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
-			_collider.SetNativeObject(other);
-			_lunyObject.InvokeOnTriggerExited(_collider);
-			_collider.SetNativeObject(null);
+			_otherCollider.SetNativeCollider(other);
+			_lunyObject.InvokeOnTriggerExited(_otherCollider);
+			_otherCollider.SetNativeCollider(null);
 		}
 
 		private void OnTriggerStay(Collider other)
 		{
-			_collider.SetNativeObject(other);
-			_lunyObject.InvokeOnTriggerUpdate(_collider);
-			_collider.SetNativeObject(null);
+			_otherCollider.SetNativeCollider(other);
+			_lunyObject.InvokeOnTriggerUpdate(_otherCollider);
+			_otherCollider.SetNativeCollider(null);
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace LunyScript.Unity.EventRelays
 	[AddComponentMenu("GameObject/")] // hide component from user interface
 	internal sealed class LunyScriptCollisionEventRelay : MonoBehaviourEventRelay
 	{
-		private UnityCollision _collision = new();
+		private UnityCollision _collisionWithOther = new();
 
 #if UNITY_EDITOR
 		private void Awake()
@@ -34,23 +34,23 @@ namespace LunyScript.Unity.EventRelays
 
 		private void OnCollisionEnter(Collision other)
 		{
-			_collision.SetNativeObject(other);
-			_lunyObject.InvokeOnCollisionEntered(_collision);
-			_collision.SetNativeObject(null);
+			_collisionWithOther.SetNativeCollision(other);
+			_lunyObject.InvokeOnCollisionEntered(_collisionWithOther);
+			_collisionWithOther.SetNativeCollision(null);
 		}
 
 		private void OnCollisionExit(Collision other)
 		{
-			_collision.SetNativeObject(other);
-			_lunyObject.InvokeOnCollisionExited(_collision);
-			_collision.SetNativeObject(null);
+			_collisionWithOther.SetNativeCollision(other);
+			_lunyObject.InvokeOnCollisionExited(_collisionWithOther);
+			_collisionWithOther.SetNativeCollision(null);
 		}
 
 		private void OnCollisionStay(Collision other)
 		{
-			_collision.SetNativeObject(other);
-			_lunyObject.InvokeOnCollisionUpdate(_collision);
-			_collision.SetNativeObject(null);
+			_collisionWithOther.SetNativeCollision(other);
+			_lunyObject.InvokeOnCollisionUpdate(_collisionWithOther);
+			_collisionWithOther.SetNativeCollision(null);
 		}
 	}
 }
