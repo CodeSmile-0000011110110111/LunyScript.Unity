@@ -1,4 +1,4 @@
-﻿using LunyScript.SmokeTests.Objects;
+﻿using LunyScript.SmokeTests.Object;
 using System;
 using System.Collections;
 using UnityEngine;

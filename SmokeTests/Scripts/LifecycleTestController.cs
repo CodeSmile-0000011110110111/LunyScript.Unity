@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = System.Object;
 
 namespace LunyScript.SmokeTests
 {
@@ -39,7 +38,7 @@ namespace LunyScript.SmokeTests
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 
-		private void OnVariableChanged(Object sender, VariableChangedArgs changedVar)
+		private void OnVariableChanged(System.Object sender, VariableChangedArgs changedVar)
 		{
 			if (changedVar.Name.StartsWith("Time."))
 				return;
