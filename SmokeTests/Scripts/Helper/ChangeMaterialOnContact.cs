@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LunyScript
+namespace LunyScript.SmokeTests.Helper
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Renderer))]

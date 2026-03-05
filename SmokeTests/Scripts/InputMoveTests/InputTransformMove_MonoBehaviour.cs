@@ -10,9 +10,9 @@ namespace LunyScript.SmokeTests.InputMoveTests
 	{
 		private void Update()
 		{
-			float horizontal = InputHelper.GetHorizontalInput();
-			float vertical = InputHelper.GetVerticalInput();
-			float moveSpeed = 4f;
+			var horizontal = InputHelper.GetHorizontalInput();
+			var vertical = InputHelper.GetVerticalInput();
+			var moveSpeed = 4f;
 
 			transform.position += transform.forward * (vertical * moveSpeed * Time.deltaTime);
 			transform.position += transform.right * (horizontal * moveSpeed * Time.deltaTime);

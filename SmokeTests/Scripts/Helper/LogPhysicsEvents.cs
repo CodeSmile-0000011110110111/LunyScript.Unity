@@ -3,7 +3,7 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace LunyScript
+namespace LunyScript.SmokeTests.Helper
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Collider))]

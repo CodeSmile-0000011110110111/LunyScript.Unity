@@ -1,5 +1,4 @@
 ﻿using Luny.Unity.Engine.Bridge.Physics;
-using System;
 using UnityEngine;
 
 namespace LunyScript.Unity.EventRelays

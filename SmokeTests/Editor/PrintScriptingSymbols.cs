@@ -39,7 +39,7 @@ namespace SmokeTests.Editor
 			if (!String.IsNullOrEmpty(defines))
 			{
 				var sortedList = defines.Split(';').OrderBy(symbol => symbol).ToArray();
-				string formattedList = string.Join("\n", sortedList);
+				var formattedList = String.Join("\n", sortedList);
 				Debug.Log($"<b>All active Script Symbols:</b>\n{formattedList}");
 			}
 		}
