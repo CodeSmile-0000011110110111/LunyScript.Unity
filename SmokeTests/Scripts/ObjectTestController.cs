@@ -17,7 +17,9 @@ namespace LunyScript.SmokeTests
 
 		private void Awake()
 		{
-			new GameObject(nameof(ObjectTestScript)); // this causes the corresponding LunyScript to build & run
+			// this causes the corresponding LunyScript (ObjectTestScript) to build & run
+			new GameObject(nameof(ObjectTestScript));
+
 			StartCoroutine(AssertAtEndOfFrame());
 		}
 
