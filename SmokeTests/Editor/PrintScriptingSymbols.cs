@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 
-namespace SmokeTests.Editor
+namespace LunyScript.UnityEditor.SmokeTests
 {
 	public class PrintScriptingSymbols : EditorWindow
 	{

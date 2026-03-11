@@ -4,7 +4,7 @@ using UnityEditor.TestTools;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace SmokeTests.Editor
+namespace LunyScript.UnityEditor.SmokeTests
 {
 	//[PrebuildSetup(typeof(LifecycleTests))]
 	public sealed class TestSceneSetup : IPrebuildSetup, IPostBuildCleanup

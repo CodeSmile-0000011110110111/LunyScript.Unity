@@ -1,6 +1,6 @@
 {
     "name": "LunyScript.UnityEditor.SmokeTests",
-    "rootNamespace": "",
+    "rootNamespace": "LunyScript.UnityEditor",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
