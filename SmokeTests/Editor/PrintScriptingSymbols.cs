@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LunyScript.UnityEditor.SmokeTests
 {
-	public class PrintScriptingSymbols : EditorWindow
+	internal class PrintScriptingSymbols : EditorWindow
 	{
 		[MenuItem("Window/CodeSmile/Print User Script Symbols")]
 		public static void PrintActiveSymbols()

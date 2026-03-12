@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-namespace LunyScript.SmokeTests.Helper
+namespace LunyScript.SmokeTests
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Renderer))]
-	public sealed class ChangeMaterialOnContact : MonoBehaviour
+	internal sealed class ChangeMaterialOnContact : MonoBehaviour
 	{
 		public Material CollisionMaterial;
 		public Material TriggerMaterial;

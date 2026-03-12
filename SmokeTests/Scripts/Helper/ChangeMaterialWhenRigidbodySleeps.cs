@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace LunyScript.SmokeTests.Helper
+namespace LunyScript.SmokeTests
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Rigidbody), typeof(Renderer))]
-	public sealed class ChangeMaterialWhenRigidbodySleeps : MonoBehaviour
+	internal sealed class ChangeMaterialWhenRigidbodySleeps : MonoBehaviour
 	{
 		[SerializeField] private Material _rigidbodySleepsMaterial;
 

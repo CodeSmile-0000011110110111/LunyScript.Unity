@@ -1,13 +1,12 @@
 ﻿using System;
 using UnityEditor;
-using UnityEditor.TestTools;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace LunyScript.UnityEditor.SmokeTests
 {
 	//[PrebuildSetup(typeof(LifecycleTests))]
-	public sealed class TestSceneSetup : IPrebuildSetup, IPostBuildCleanup
+	internal  sealed class TestSceneSetup : IPrebuildSetup, IPostBuildCleanup
 	{
 		private const String TestScenePath = "Packages/de.codesmile.lunyscript/LunyScript.Unity/Tests/ObjectLifecycleTests.unity";
 
@@ -24,13 +23,4 @@ namespace LunyScript.UnityEditor.SmokeTests
 	}
 
 	// This runs globally for all PlayMode/Player tests
-	public class GlobalTestSceneSetup : ITestPlayerBuildModifier
-	{
-		public BuildPlayerOptions ModifyOptions(BuildPlayerOptions playerOptions)
-		{
-			Debug.LogWarning("TEST SCENE ModifyOptions");
-
-			return playerOptions;
-		}
-	}
 }

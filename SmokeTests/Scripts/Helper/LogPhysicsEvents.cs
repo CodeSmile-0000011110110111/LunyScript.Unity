@@ -3,11 +3,11 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace LunyScript.SmokeTests.Helper
+namespace LunyScript.SmokeTests
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Collider))]
-	public sealed class PhysicsEventLogger : MonoBehaviour
+	internal sealed class PhysicsEventLogger : MonoBehaviour
 	{
 		public Boolean LogTriggerEvents = true;
 		public Boolean LogCollisionEvents = true;

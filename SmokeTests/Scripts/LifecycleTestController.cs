@@ -1,5 +1,4 @@
 using Luny;
-using LunyScript.SmokeTests.Lifecycle;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -7,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace LunyScript.SmokeTests
 {
-	public sealed class LifecycleTestController : MonoBehaviour
+	internal sealed class LifecycleTestController : MonoBehaviour
 	{
 		[Header("Tests")]
 		public Boolean Assert_Runs_WhenCreated_Passed;

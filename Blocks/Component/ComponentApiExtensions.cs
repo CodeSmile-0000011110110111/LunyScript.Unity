@@ -1,7 +1,8 @@
+using LunyScript.Api;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Unity.Blocks.Component
+namespace LunyScript.Unity.Blocks
 {
 	public static class ComponentApiExtensions
 	{

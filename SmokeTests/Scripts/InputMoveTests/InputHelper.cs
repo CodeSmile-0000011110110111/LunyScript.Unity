@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace LunyScript.SmokeTests.InputMoveTests
+namespace LunyScript.SmokeTests
 {
-	public static class InputHelper
+	internal static class InputHelper
 	{
 		public static Vector2 GetMovementInput()
 		{

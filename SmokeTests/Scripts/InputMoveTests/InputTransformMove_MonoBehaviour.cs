@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunyScript.SmokeTests.InputMoveTests
+namespace LunyScript.SmokeTests
 {
 	/// <summary>
 	/// Typical Unity tutorial script implementing a 3-way motion relative to object's orientation
