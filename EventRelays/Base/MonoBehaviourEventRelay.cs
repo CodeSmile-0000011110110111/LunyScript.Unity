@@ -11,7 +11,7 @@ namespace LunyScript.Unity.EventRelays
 		internal void Initialize(ScriptRuntimeContext runtimeContext)
 		{
 			_lunyObject = (LunyObject)runtimeContext.LunyObject;
-			_lunyObject.OnDestroy += OnLunyObjectDestroy;
+			_lunyObject.OnDestroyed += OnLunyObjectDestroy;
 		}
 
 		private void OnLunyObjectDestroy() => _lunyObject = null;
