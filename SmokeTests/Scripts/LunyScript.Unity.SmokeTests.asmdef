@@ -2,21 +2,17 @@
     "name": "LunyScript.Unity.SmokeTests",
     "rootNamespace": "LunyScript",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "LunyScript",
-        "LunyScript.Unity",
-        "Luny",
-        "LunyScript.SmokeTests",
-        "Unity.InputSystem"
+        "GUID:d8105533248dd994a834ff6858cf7898",
+        "GUID:d3eaacbbd31dbfe4bbd3a9bce5c65632",
+        "GUID:91bc321d79ae8794397fcd53c71f777c",
+        "GUID:96fa84eecde256c41bcbbfcac36b1df4",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "nunit.framework.dll"
-    ],
+    "overrideReferences": false,
+    "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"

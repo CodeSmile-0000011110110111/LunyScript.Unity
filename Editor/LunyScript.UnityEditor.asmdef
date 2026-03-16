@@ -1,7 +1,11 @@
 {
     "name": "LunyScript.UnityEditor",
     "rootNamespace": "LunyScript.UnityEditor",
-    "references": ["GUID:d3eaacbbd31dbfe4bbd3a9bce5c65632","GUID:94165753badb19e478ca442e77858430","GUID:d8105533248dd994a834ff6858cf7898"],
+    "references": [
+        "GUID:d8105533248dd994a834ff6858cf7898",
+        "GUID:94165753badb19e478ca442e77858430",
+        "GUID:d3eaacbbd31dbfe4bbd3a9bce5c65632"
+    ],
     "includePlatforms": [
         "Editor"
     ],

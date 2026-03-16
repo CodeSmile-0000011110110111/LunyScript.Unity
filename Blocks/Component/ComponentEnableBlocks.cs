@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace LunyScript.Unity.Blocks
 {
-	internal sealed class ComponentEnableBlock : ScriptActionBlock
+	internal sealed class ComponentEnableBlock : ActionBlock
 	{
 		private Type _componentType;
 
-		public static ScriptActionBlock Create(Type componentType) => new ComponentEnableBlock(componentType);
+		public static ActionBlock Create(Type componentType) => new ComponentEnableBlock(componentType);
 
 		internal static void SetComponentEnabled(GameObject go, Type componentType, Boolean enabled)
 		{
@@ -49,11 +49,11 @@ namespace LunyScript.Unity.Blocks
 		public override String ToString() => $"{nameof(ComponentEnableBlock)}({_componentType?.Name})";
 	}
 
-	internal sealed class ComponentDisableBlock : ScriptActionBlock
+	internal sealed class ComponentDisableBlock : ActionBlock
 	{
 		private Type _componentType;
 
-		public static ScriptActionBlock Create(Type componentType) => new ComponentDisableBlock(componentType);
+		public static ActionBlock Create(Type componentType) => new ComponentDisableBlock(componentType);
 
 		private ComponentDisableBlock() {}
 
