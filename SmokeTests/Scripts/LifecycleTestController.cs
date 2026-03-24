@@ -44,7 +44,7 @@ namespace LunyScript.SmokeTests
 
 			LunyLogger.LogInfo($"{changedVar}", this);
 
-			var pass = changedVar.Current.AsBoolean();
+ 		var pass = changedVar.Handle is Table.VarHandle h && h.Variable.AsBoolean();
 			if (changedVar.Name == nameof(Assert_Runs_OnCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
 			else if (changedVar.Name == nameof(Assert_Runs_OnDestroyed))

@@ -1,0 +1,17 @@
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:Style src="ScriptVariablesWindow.uss" />
+    <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
+        <ui:TextField name="filter-field" placeholder-text="Filter by name..." />
+        <ui:MultiColumnListView name="variables-list"
+                                show-alternating-row-backgrounds="ContentOnly"
+                                fixed-item-height="22"
+                                style="flex-grow: 1;">
+            <ui:Columns>
+                <ui:Column name="name" title="Name" stretchable="true" sortable="true" />
+                <ui:Column name="value" title="Value" stretchable="true" sortable="false" />
+                <ui:Column name="timestamp" title="Frame" width="80" sortable="true" />
+            </ui:Columns>
+        </ui:MultiColumnListView>
+        <ui:Label name="empty-label" text="No scripted object selected." style="display: none;" />
+    </ui:VisualElement>
+</ui:UXML>

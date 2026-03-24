@@ -1,5 +1,7 @@
 ﻿using Luny.Unity;
+using LunyScript.Diagnostics;
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace LunyScript.Unity.Adapters
@@ -29,5 +31,26 @@ namespace LunyScript.Unity.Adapters
 			_eventRelayInstaller.Shutdown();
 			_eventRelayInstaller = null;
 		}
+
+#if UNITY_EDITOR
+		// this ensures proper "disabled domain reload" behaviour
+		[InitializeOnLoadMethod]
+		private static void Init()
+		{
+			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+			// clear once after domain reload
+			EnsureStaticFieldsAreNull();
+		}
+
+		private static void OnPlayModeStateChanged(PlayModeStateChange state)
+		{
+			if (state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.ExitingEditMode)
+				EnsureStaticFieldsAreNull();
+		}
+
+		private static void EnsureStaticFieldsAreNull() => ScriptDiagnosticsObserver.ResetStaticFields();
+#endif
 	}
 }
