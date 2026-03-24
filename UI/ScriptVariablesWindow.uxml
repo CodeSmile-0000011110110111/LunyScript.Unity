@@ -13,6 +13,6 @@
                 <ui:Column name="timestamp" title="Frame" width="80" sortable="true" />
             </ui:Columns>
         </ui:MultiColumnListView>
-        <ui:Label name="empty-label" text="No scripted object selected." style="display: none;" />
+        <ui:Label name="empty-label" text="Not in PlayMode or no Luny-scripted object selected." style="display: none;" />
     </ui:VisualElement>
 </ui:UXML>
