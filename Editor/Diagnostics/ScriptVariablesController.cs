@@ -1,11 +1,11 @@
 ﻿using Luny;
-using LunyScript;
 using LunyScript.Diagnostics;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = System.Object;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
@@ -15,9 +15,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private readonly TextField _filterField;
 		private readonly MultiColumnListView _listView;
 		private readonly Label _emptyLabel;
+		private readonly List<ScriptVariableState> _viewRows = new();
 
 		private ScriptVariableState[] _masterRows;
-		private readonly List<ScriptVariableState> _viewRows = new();
 		private ITable _table;
 		private String _filterText = String.Empty;
 		private IVisualElementScheduledItem _filterDebounce;
@@ -30,29 +30,40 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_emptyLabel = root.Q<Label>("empty-label");
 
 			SetupListView();
+			UpdateEmptyState();
+
 			_filterField.RegisterValueChangedCallback(OnFilterChanged);
 
-			ScriptDiagnosticsObserver.OnDiagnosticsStartup += OnDiagnosticsStartup;
-			ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
-			Selection.selectionChanged += OnSelectionChanged;
-
 			if (ScriptDiagnosticsObserver.Instance != null)
-				OnSelectionChanged();
+				OnDiagnosticsStartup(ScriptDiagnosticsObserver.Instance);
+			else
+				ScriptDiagnosticsObserver.OnDiagnosticsStartup += OnDiagnosticsStartup;
 
-			UpdateEmptyState();
+			Selection.selectionChanged += OnSelectionChanged;
 		}
 
-		public void Dispose()
+		public void OnEnable() => OnSelectionChanged();
+		public void OnDisable() => Reset();
+		public void Dispose() => OnDiagnosticsShutdown(ScriptDiagnosticsObserver.Instance);
+
+		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
 		{
+			LunyLogger.LogWarning("OnDiagnosticsStartup", this);
 			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
-			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
-			Selection.selectionChanged -= OnSelectionChanged;
-			UnsubscribeFromTable();
+			ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
+			OnSelectionChanged();
 		}
-
-		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _) => OnSelectionChanged();
 
 		private void OnDiagnosticsShutdown(ScriptDiagnosticsObserver _)
+		{
+			LunyLogger.LogWarning("OnDiagnosticsShutdown", this);
+			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
+			Selection.selectionChanged -= OnSelectionChanged;
+
+			Reset();
+		}
+
+		private void Reset()
 		{
 			UnsubscribeFromTable();
 			_table = null;
@@ -74,9 +85,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 				_table.OnVariableChanged += OnVariableChanged;
 			}
 			else
-			{
 				_masterRows = null;
-			}
 
 			RebuildView();
 			UpdateEmptyState();
@@ -84,14 +93,15 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private ITable ResolveTable()
 		{
-			if (ScriptEngine.Instance == null)
+			var scriptEngine = ScriptEngine.Instance;
+			if (scriptEngine == null)
 				return null;
 
 			var go = Selection.activeGameObject;
 			if (go == null || !go.scene.IsValid())
 				return null;
 
-			var context = ScriptEngine.Instance.GetScriptContext(go.GetInstanceID());
+			var context = scriptEngine.GetScriptContext(go.GetInstanceID());
 			return context?.LocalVariables;
 		}
 
@@ -107,7 +117,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			return rows;
 		}
 
-		private void OnVariableChanged(object sender, VariableChangedArgs args)
+		private void OnVariableChanged(Object sender, VariableChangedArgs args)
 		{
 			if (_masterRows == null)
 				return;
@@ -167,13 +177,17 @@ namespace LunyScript.UnityEditor.Diagnostics
 			var ascending = desc.direction == SortDirection.Ascending;
 
 			if (desc.columnName == "name")
+			{
 				_viewRows.Sort((a, b) => ascending
 					? String.Compare(a.Handle.Name, b.Handle.Name, StringComparison.OrdinalIgnoreCase)
 					: String.Compare(b.Handle.Name, a.Handle.Name, StringComparison.OrdinalIgnoreCase));
+			}
 			else if (desc.columnName == "timestamp")
+			{
 				_viewRows.Sort((a, b) => ascending
 					? a.FrameStamp.CompareTo(b.FrameStamp)
 					: b.FrameStamp.CompareTo(a.FrameStamp));
+			}
 		}
 
 		private void SetupListView()
