@@ -22,6 +22,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private String _filterText = String.Empty;
 		private IVisualElementScheduledItem _filterDebounce;
 
+		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.Handle is Table.VarHandle h ? (Int32)h.Variable.Type : -1;
+
 		internal ScriptVariablesController(VisualElement root)
 		{
 			_root = root;
@@ -42,13 +44,13 @@ namespace LunyScript.UnityEditor.Diagnostics
 			Selection.selectionChanged += OnSelectionChanged;
 		}
 
+		public void Dispose() => OnDiagnosticsShutdown(ScriptDiagnosticsObserver.Instance);
+
 		public void OnEnable() => OnSelectionChanged();
 		public void OnDisable() => Reset();
-		public void Dispose() => OnDiagnosticsShutdown(ScriptDiagnosticsObserver.Instance);
 
 		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
 		{
-			LunyLogger.LogWarning("OnDiagnosticsStartup", this);
 			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
 			ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
 			OnSelectionChanged();
@@ -56,7 +58,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void OnDiagnosticsShutdown(ScriptDiagnosticsObserver _)
 		{
-			LunyLogger.LogWarning("OnDiagnosticsShutdown", this);
 			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
 			Selection.selectionChanged -= OnSelectionChanged;
 
@@ -99,7 +100,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			var go = Selection.activeGameObject;
 			if (go == null || !go.scene.IsValid())
-				return null;
+				return scriptEngine.GlobalVariables;
 
 			var context = scriptEngine.GetScriptContext(go.GetInstanceID());
 			return context?.LocalVariables;
@@ -145,7 +146,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		{
 			_filterText = evt.newValue ?? String.Empty;
 			_filterDebounce?.Pause();
-			_filterDebounce = _root.schedule.Execute(RebuildView).StartingIn(150);
+			_filterDebounce = _root.schedule.Execute(RebuildView).StartingIn(200);
 		}
 
 		private void RebuildView()
@@ -182,9 +183,21 @@ namespace LunyScript.UnityEditor.Diagnostics
 					? String.Compare(a.Handle.Name, b.Handle.Name, StringComparison.OrdinalIgnoreCase)
 					: String.Compare(b.Handle.Name, a.Handle.Name, StringComparison.OrdinalIgnoreCase));
 			}
+			else if (desc.columnName == "value")
+			{
+				_viewRows.Sort((a, b) =>
+				{
+					var typeCompare = GetValueTypeOrdinal(a).CompareTo(GetValueTypeOrdinal(b));
+					if (typeCompare != 0)
+						return ascending ? typeCompare : -typeCompare;
+
+					var nameCompare = String.Compare(a.Handle.Name, b.Handle.Name, StringComparison.OrdinalIgnoreCase);
+					return ascending ? nameCompare : -nameCompare;
+				});
+			}
 			else if (desc.columnName == "timestamp")
 			{
-				_viewRows.Sort((a, b) => ascending
+				_viewRows.Sort((b, a) => ascending
 					? a.FrameStamp.CompareTo(b.FrameStamp)
 					: b.FrameStamp.CompareTo(a.FrameStamp));
 			}

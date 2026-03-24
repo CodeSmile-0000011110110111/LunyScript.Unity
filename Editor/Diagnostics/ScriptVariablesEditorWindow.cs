@@ -28,22 +28,11 @@ namespace LunyScript.UnityEditor.Diagnostics
 		}
 
 		private void Awake() => EditorApplication.playModeStateChanged += OnPlayModeStateChange;
-
-		private void OnEnable()
-		{
-			LunyLogger.LogWarning("OnEnable", this);
-			_controller?.OnEnable();
-		}
-
-		private void OnDisable()
-		{
-			LunyLogger.LogWarning("OnDisable", this);
-			_controller?.OnDisable();
-		}
+		private void OnEnable() => _controller?.OnEnable();
+		private void OnDisable() => _controller?.OnDisable();
 
 		private void OnDestroy()
 		{
-			LunyLogger.LogWarning("OnDestroy", this);
 			_controller?.Dispose();
 			_controller = null;
 
@@ -55,7 +44,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			switch (state)
 			{
 				case PlayModeStateChange.EnteredPlayMode:
-					_controller?.OnEnable();
+					EditorApplication.delayCall += () => _controller?.OnEnable();
 					break;
 				case PlayModeStateChange.ExitingPlayMode:
 					_controller?.OnDisable();
