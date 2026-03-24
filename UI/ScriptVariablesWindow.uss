@@ -15,3 +15,8 @@
     color: rgba(180, 180, 180, 0.6);
     margin-top: 16px;
 }
+
+/* This targets the RadioButtonGroup to get horizontal layout */
+.unity-radio-button-group__container {
+    flex-direction: row;
+}

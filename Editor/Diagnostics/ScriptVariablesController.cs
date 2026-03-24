@@ -13,6 +13,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 	{
 		private readonly VisualElement _root;
 		private readonly TextField _filterField;
+		private readonly Button _btnGlobal;
+		private readonly Button _btnInstance;
 		private readonly MultiColumnListView _listView;
 		private readonly Label _emptyLabel;
 		private readonly List<ScriptVariableState> _viewRows = new();
@@ -21,6 +23,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private ITable _table;
 		private String _filterText = String.Empty;
 		private IVisualElementScheduledItem _filterDebounce;
+		private Boolean _showGlobal;
 
 		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.Handle is Table.VarHandle h ? (Int32)h.Variable.Type : -1;
 
@@ -28,13 +31,18 @@ namespace LunyScript.UnityEditor.Diagnostics
 		{
 			_root = root;
 			_filterField = root.Q<TextField>("filter-field");
+			_btnGlobal = root.Q<Button>("btn-global");
+			_btnInstance = root.Q<Button>("btn-instance");
 			_listView = root.Q<MultiColumnListView>("variables-list");
 			_emptyLabel = root.Q<Label>("empty-label");
 
 			SetupListView();
 			UpdateEmptyState();
+			UpdateToggleButtons();
 
 			_filterField.RegisterValueChangedCallback(OnFilterChanged);
+			_btnGlobal.clicked += OnGlobalClicked;
+			_btnInstance.clicked += OnInstanceClicked;
 
 			if (ScriptDiagnosticsObserver.Instance != null)
 				OnDiagnosticsStartup(ScriptDiagnosticsObserver.Instance);
@@ -48,6 +56,26 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		public void OnEnable() => OnSelectionChanged();
 		public void OnDisable() => Reset();
+
+		private void OnGlobalClicked()
+		{
+			_showGlobal = true;
+			UpdateToggleButtons();
+			RefreshTable();
+		}
+
+		private void OnInstanceClicked()
+		{
+			_showGlobal = false;
+			UpdateToggleButtons();
+			RefreshTable();
+		}
+
+		private void UpdateToggleButtons()
+		{
+			_btnGlobal.EnableInClassList("active-toggle", _showGlobal);
+			_btnInstance.EnableInClassList("active-toggle", !_showGlobal);
+		}
 
 		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
 		{
@@ -77,8 +105,16 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void OnSelectionChanged()
 		{
+			_showGlobal = false;
+			UpdateToggleButtons();
+			RefreshTable();
+		}
+
+		private void RefreshTable()
+		{
 			UnsubscribeFromTable();
-			_table = ResolveTable();
+			var go = _showGlobal ? null : Selection.activeGameObject;
+			_table = ResolveTable(go);
 
 			if (_table != null)
 			{
@@ -92,13 +128,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 			UpdateEmptyState();
 		}
 
-		private ITable ResolveTable()
+		private ITable ResolveTable(GameObject go)
 		{
 			var scriptEngine = ScriptEngine.Instance;
 			if (scriptEngine == null)
 				return null;
 
-			var go = Selection.activeGameObject;
 			if (go == null || !go.scene.IsValid())
 				return scriptEngine.GlobalVariables;
 
