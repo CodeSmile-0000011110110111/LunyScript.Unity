@@ -8,7 +8,7 @@ using Object = System.Object;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal sealed class ScriptVariablesController
+	internal sealed class ScriptVariablesController : IScriptDiagnosticsController
 	{
 		private readonly VisualElement _root;
 		private readonly TextField _filterField;
@@ -64,6 +64,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_btnGlobal.EnableInClassList("active-toggle", _showGlobal);
 			_btnInstance.EnableInClassList("active-toggle", !_showGlobal);
 		}
+
+		void IScriptDiagnosticsController.Reset() => Reset();
+		void IScriptDiagnosticsController.OnSelectionChanged(GameObject go) => OnSelectionChanged(go);
 
 		internal void Reset()
 		{

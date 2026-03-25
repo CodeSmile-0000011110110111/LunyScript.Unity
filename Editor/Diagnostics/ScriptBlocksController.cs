@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal sealed class ScriptBlocksController
+	internal sealed class ScriptBlocksController : IScriptDiagnosticsController
 	{
 		// ── Fields ────────────────────────────────────────────────────────
 
@@ -62,6 +62,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 		}
 
 		// ── Public API ────────────────────────────────────────────────────
+
+		void IScriptDiagnosticsController.Reset() => Reset();
+		void IScriptDiagnosticsController.OnSelectionChanged(GameObject go) => OnSelectionChanged(go);
 
 		internal void Reset()
 		{
@@ -278,25 +281,21 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			if (!hasFilter)
 			{
-				foreach (var categoryItem in _rootItems)
-				{
-					_treeView.ExpandItem(categoryItem.id);
-					if (categoryItem.hasChildren)
-					{
-						foreach (var eventItem in categoryItem.children)
-						{
-							_treeView.ExpandItem(eventItem.id);
-							if (eventItem.hasChildren)
-							{
-								foreach (var blockItem in eventItem.children)
-									_treeView.ExpandItem(blockItem.id);
-							}
-						}
-					}
-				}
+				foreach (var item in _rootItems)
+					ExpandItemRecursive(item);
 			}
 
 			_treeView.RefreshItems();
+		}
+
+		private void ExpandItemRecursive(TreeViewItemData<NodeData> item)
+		{
+			_treeView.ExpandItem(item.id);
+			if (item.hasChildren)
+			{
+				foreach (var child in item.children)
+					ExpandItemRecursive(child);
+			}
 		}
 
 		private Boolean ApplyFilterToItem(TreeViewItemData<NodeData> item, Boolean hasFilter)
