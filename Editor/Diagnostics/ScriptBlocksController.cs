@@ -241,10 +241,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 					if (block == null)
 						continue;
 
-					var state = new ScriptBlockState(block);
-					blockChildren.Add(new TreeViewItemData<NodeData>(
-						NextId(),
-						new NodeData { Kind = NodeData.NodeKind.Block, Label = state.DisplayString, BlockState = state }));
+					blockChildren.Add(BuildBlockNode(block));
 				}
 
 				var seqLabel = $"{seq.GetType().Name} [{seq.Blocks.Count} block(s)]";
@@ -254,6 +251,53 @@ namespace LunyScript.UnityEditor.Diagnostics
 					blockChildren.Count > 0 ? blockChildren : null));
 			}
 			return result;
+		}
+
+		private TreeViewItemData<NodeData> BuildBlockNode(ScriptBlock block)
+		{
+			var state = new ScriptBlockState(block);
+			var nodeData = new NodeData { Kind = NodeData.NodeKind.Block, BlockState = state };
+
+			if (block is IBlockContainer container)
+			{
+				var containerChildren = BuildContainerChildren(container);
+				return new TreeViewItemData<NodeData>(NextId(), nodeData, containerChildren.Count > 0 ? containerChildren : null);
+			}
+
+			return new TreeViewItemData<NodeData>(NextId(), nodeData);
+		}
+
+		private List<TreeViewItemData<NodeData>> BuildContainerChildren(IBlockContainer container)
+		{
+			var result = new List<TreeViewItemData<NodeData>>();
+			var condCount = container.ConditionSequenceCount;
+			var actCount = container.ActionSequenceCount;
+			var maxCount = Math.Max(condCount, actCount);
+
+			for (var i = 0; i < maxCount; i++)
+			{
+				if (i < condCount)
+					result.Add(BuildBranchNode(container.GetConditionSequenceName(i), container.GetConditionSequence(i)));
+				if (i < actCount)
+					result.Add(BuildBranchNode(container.GetActionSequenceName(i), container.GetActionSequence(i)));
+			}
+
+			return result;
+		}
+
+		private TreeViewItemData<NodeData> BuildBranchNode(String name, IEnumerable<IScriptBlock> blocks)
+		{
+			var children = new List<TreeViewItemData<NodeData>>();
+			foreach (var block in blocks)
+			{
+				if (block is ScriptBlock sb)
+					children.Add(BuildBlockNode(sb));
+			}
+
+			return new TreeViewItemData<NodeData>(
+				NextId(),
+				new NodeData { Kind = NodeData.NodeKind.Branch, Label = name },
+				children.Count > 0 ? children : null);
 		}
 
 		// ── Filter ────────────────────────────────────────────────────────
@@ -358,13 +402,14 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private sealed class NodeData
 		{
-			public enum NodeKind
-			{
-				Category,
-				Event,
-				Sequence,
-				Block,
-			}
+ 		public enum NodeKind
+ 		{
+ 			Category,
+ 			Event,
+ 			Sequence,
+ 			Branch,
+ 			Block,
+ 		}
 
 			public NodeKind Kind;
 			public String Label;
