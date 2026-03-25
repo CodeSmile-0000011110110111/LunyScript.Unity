@@ -2,14 +2,13 @@
 using LunyScript.Diagnostics;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = System.Object;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal sealed class ScriptVariablesController : IDisposable
+	internal sealed class ScriptVariablesController
 	{
 		private readonly VisualElement _root;
 		private readonly TextField _filterField;
@@ -24,8 +23,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private String _filterText = String.Empty;
 		private IVisualElementScheduledItem _filterDebounce;
 		private Boolean _showGlobal;
+		private GameObject _selectedGameObject;
 
-		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.Handle is Table.VarHandle h ? (Int32)h.Variable.Type : -1;
+		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.ValueTypeOrdinal;
 
 		internal ScriptVariablesController(VisualElement root)
 		{
@@ -43,19 +43,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_filterField.RegisterValueChangedCallback(OnFilterChanged);
 			_btnGlobal.clicked += OnGlobalClicked;
 			_btnInstance.clicked += OnInstanceClicked;
-
-			if (ScriptDiagnosticsObserver.Instance != null)
-				OnDiagnosticsStartup(ScriptDiagnosticsObserver.Instance);
-			else
-				ScriptDiagnosticsObserver.OnDiagnosticsStartup += OnDiagnosticsStartup;
-
-			Selection.selectionChanged += OnSelectionChanged;
 		}
-
-		public void Dispose() => OnDiagnosticsShutdown(ScriptDiagnosticsObserver.Instance);
-
-		public void OnEnable() => OnSelectionChanged();
-		public void OnDisable() => Reset();
 
 		private void OnGlobalClicked()
 		{
@@ -77,22 +65,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_btnInstance.EnableInClassList("active-toggle", !_showGlobal);
 		}
 
-		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
-		{
-			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
-			ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
-			OnSelectionChanged();
-		}
-
-		private void OnDiagnosticsShutdown(ScriptDiagnosticsObserver _)
-		{
-			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
-			Selection.selectionChanged -= OnSelectionChanged;
-
-			Reset();
-		}
-
-		private void Reset()
+		internal void Reset()
 		{
 			UnsubscribeFromTable();
 			_table = null;
@@ -103,8 +76,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 			UpdateEmptyState();
 		}
 
-		private void OnSelectionChanged()
+		internal void OnSelectionChanged(GameObject go)
 		{
+			_selectedGameObject = go;
 			_showGlobal = false;
 			UpdateToggleButtons();
 			RefreshTable();
@@ -113,7 +87,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private void RefreshTable()
 		{
 			UnsubscribeFromTable();
-			var go = _showGlobal ? null : Selection.activeGameObject;
+			var go = _showGlobal ? null : _selectedGameObject;
 			_table = ResolveTable(go);
 
 			if (_table != null)
@@ -160,7 +134,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			foreach (var row in _masterRows)
 			{
-				if (row.Handle.Name == args.Name)
+				if (row.HasName(args.Name))
 				{
 					row.FrameStamp = Time.frameCount;
 					break;
@@ -169,7 +143,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			for (var i = 0; i < _viewRows.Count; i++)
 			{
-				if (_viewRows[i].Handle.Name != args.Name)
+				if (!_viewRows[i].HasName(args.Name))
 					continue;
 
 				_listView.RefreshItem(i);
@@ -192,8 +166,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			{
 				foreach (var row in _masterRows)
 				{
-					if (String.IsNullOrEmpty(_filterText) ||
-					    row.Handle.Name.IndexOf(_filterText, StringComparison.OrdinalIgnoreCase) >= 0)
+					if (String.IsNullOrEmpty(_filterText) || row.Contains(_filterText))
 						_viewRows.Add(row);
 				}
 			}
@@ -214,9 +187,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			if (desc.columnName == "name")
 			{
-				_viewRows.Sort((a, b) => ascending
-					? String.Compare(a.Handle.Name, b.Handle.Name, StringComparison.OrdinalIgnoreCase)
-					: String.Compare(b.Handle.Name, a.Handle.Name, StringComparison.OrdinalIgnoreCase));
+				_viewRows.Sort((a, b) => ascending ? a.CompareNameTo(b) : b.CompareNameTo(a));
 			}
 			else if (desc.columnName == "value")
 			{
@@ -226,7 +197,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 					if (typeCompare != 0)
 						return ascending ? typeCompare : -typeCompare;
 
-					var nameCompare = String.Compare(a.Handle.Name, b.Handle.Name, StringComparison.OrdinalIgnoreCase);
+					var nameCompare = a.CompareNameTo(b);
 					return ascending ? nameCompare : -nameCompare;
 				});
 			}
@@ -247,8 +218,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 			nameCol.bindCell = (element, index) =>
 			{
 				var row = _viewRows[index];
-				((TextField)element).SetValueWithoutNotify(row.Handle.Name);
-				element.EnableInClassList("constant-row", row.Handle.IsConstant);
+				((TextField)element).SetValueWithoutNotify(row.Name);
+				element.EnableInClassList("constant-row", row.IsConstant);
 			};
 
 			var valueCol = _listView.columns["value"];
@@ -262,7 +233,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			{
 				var row = _viewRows[index];
 				((IntegerField)element).SetValueWithoutNotify(row.FrameStamp);
-				element.EnableInClassList("constant-row", row.Handle.IsConstant);
+				element.EnableInClassList("constant-row", row.IsConstant);
 			};
 		}
 
@@ -271,7 +242,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			container.Clear();
 
 			var row = _viewRows[index];
-			if (row.Handle is not Table.VarHandle varHandle)
+			if (!row.TryGetVarHandle(out var varHandle))
 				return;
 
 			var variable = varHandle.Variable;
@@ -282,28 +253,28 @@ namespace LunyScript.UnityEditor.Diagnostics
 				case Variable.ValueType.Boolean:
 					var toggle = new Toggle { style = { flexGrow = 1 } };
 					toggle.SetValueWithoutNotify(variable.AsBoolean());
-					toggle.SetEnabled(!row.Handle.IsConstant);
+					toggle.SetEnabled(!row.IsConstant);
 					toggle.RegisterValueChangedCallback(evt => varHandle.Variable = evt.newValue);
 					valueElement = toggle;
 					break;
 				case Variable.ValueType.Number:
 					var df = new DoubleField { style = { flexGrow = 1 } };
 					df.SetValueWithoutNotify(variable.AsDouble());
-					df.SetEnabled(!row.Handle.IsConstant);
+					df.SetEnabled(!row.IsConstant);
 					df.RegisterValueChangedCallback(evt => varHandle.Variable = evt.newValue);
 					valueElement = df;
 					break;
 				default: // String
 					var tf = new TextField { style = { flexGrow = 1 } };
 					tf.SetValueWithoutNotify(variable.AsString());
-					tf.SetEnabled(!row.Handle.IsConstant);
+					tf.SetEnabled(!row.IsConstant);
 					tf.RegisterValueChangedCallback(evt => varHandle.Variable = evt.newValue);
 					valueElement = tf;
 					break;
 			}
 
 			container.Add(valueElement);
-			container.EnableInClassList("constant-row", row.Handle.IsConstant);
+			container.EnableInClassList("constant-row", row.IsConstant);
 		}
 
 		private void OnColumnSortingChanged()

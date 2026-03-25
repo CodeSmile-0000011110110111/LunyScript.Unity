@@ -1,4 +1,4 @@
-﻿using Luny;
+﻿using LunyScript.Diagnostics;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -16,38 +16,68 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void CreateGUI()
 		{
-			LunyLogger.LogWarning("CreateGUI", this);
-
 			var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(s_UxmlPath);
 			if (uxml == null)
 				throw new MissingReferenceException($"Failed to load UI Document: {s_UxmlPath}");
 
 			uxml.CloneTree(rootVisualElement);
-			_controller = new ScriptVariablesController(rootVisualElement);
-			_controller?.OnEnable();
+			CreateController();
+			UpdateControllerTargetObject();
 		}
 
-		private void Awake() => EditorApplication.playModeStateChanged += OnPlayModeStateChange;
-		private void OnEnable() => _controller?.OnEnable();
-		private void OnDisable() => _controller?.OnDisable();
+		private void OnEnable() => UpdateControllerTargetObject();
+
+		private void OnDisable() => ResetController();
 
 		private void OnDestroy()
 		{
-			_controller?.Dispose();
-			_controller = null;
+			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
+			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
+			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			Selection.selectionChanged -= UpdateControllerTargetObject;
 
-			EditorApplication.playModeStateChanged -= OnPlayModeStateChange;
+			_controller = null;
 		}
 
-		private void OnPlayModeStateChange(PlayModeStateChange state)
+		private void CreateController()
+		{
+			if (ScriptDiagnosticsObserver.Instance == null)
+				ScriptDiagnosticsObserver.OnDiagnosticsStartup += OnDiagnosticsStartup;
+			else
+			{
+				ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
+				ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
+				EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+				Selection.selectionChanged += UpdateControllerTargetObject;
+
+				_controller = new ScriptVariablesController(rootVisualElement);
+			}
+		}
+
+		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
+		{
+			CreateController();
+			UpdateControllerTargetObject();
+		}
+
+		private void OnDiagnosticsShutdown(ScriptDiagnosticsObserver _)
+		{
+			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
+			ResetController();
+		}
+
+		private void UpdateControllerTargetObject() => _controller?.OnSelectionChanged(Selection.activeGameObject);
+		private void ResetController() => _controller?.Reset();
+
+		private void OnPlayModeStateChanged(PlayModeStateChange state)
 		{
 			switch (state)
 			{
 				case PlayModeStateChange.EnteredPlayMode:
-					EditorApplication.delayCall += () => _controller?.OnEnable();
+					UpdateControllerTargetObject();
 					break;
 				case PlayModeStateChange.ExitingPlayMode:
-					_controller?.OnDisable();
+					ResetController();
 					break;
 			}
 		}
