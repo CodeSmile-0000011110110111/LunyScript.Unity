@@ -1,0 +1,11 @@
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/ScriptBlocksWindow.uss"/>
+    <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
+        <ui:VisualElement name="toolbar" style="flex-direction: row;">
+            <ui:TextField name="filter-field" placeholder-text="Filter by block name..." style="flex-grow: 1;"/>
+            <ui:Toggle name="toggle-show-empty" label="Show Empty"/>
+        </ui:VisualElement>
+        <ui:TreeView name="blocks-tree" fixed-item-height="22" style="flex-grow: 1;"/>
+        <ui:Label name="empty-label" text="Not in PlayMode or no Luny-scripted object selected." style="display: none;"/>
+    </ui:VisualElement>
+</ui:UXML>
