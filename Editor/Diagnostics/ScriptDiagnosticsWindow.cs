@@ -1,4 +1,5 @@
 ﻿using LunyScript.Diagnostics;
+using LunyScript.Unity.UI;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -6,18 +7,11 @@ using UnityEngine.UIElements;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal interface IScriptDiagnosticsController
-	{
-		void Reset();
-		void OnSelectionChanged(GameObject go);
-	}
-
-	internal abstract class ScriptDiagnosticsEditorWindow : EditorWindow
+	internal abstract class ScriptDiagnosticsWindow : EditorWindow
 	{
 		private IScriptDiagnosticsController _controller;
 
 		protected abstract String UxmlPath { get; }
-		protected abstract IScriptDiagnosticsController CreateControllerInstance(VisualElement root);
 
 		private void CreateGUI()
 		{
@@ -27,43 +21,45 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			uxml.CloneTree(rootVisualElement);
 			CreateController();
-			UpdateControllerTargetObject();
 		}
 
-		private void OnEnable() => UpdateControllerTargetObject();
+		private void OnEnable()
+		{
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+			Selection.selectionChanged += UpdateController;
+			UpdateController();
+		}
 
-		private void OnDisable() => ResetController();
+		private void OnDisable()
+		{
+			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			Selection.selectionChanged -= UpdateController;
+			ResetController();
+		}
 
 		private void OnDestroy()
 		{
 			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
 			ScriptDiagnosticsObserver.OnDiagnosticsShutdown -= OnDiagnosticsShutdown;
-			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-			Selection.selectionChanged -= UpdateControllerTargetObject;
 
 			_controller = null;
 		}
 
+		protected abstract IScriptDiagnosticsController CreateControllerInstance(VisualElement root);
+
 		private void CreateController()
 		{
+			ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
 			if (ScriptDiagnosticsObserver.Instance == null)
 				ScriptDiagnosticsObserver.OnDiagnosticsStartup += OnDiagnosticsStartup;
 			else
-			{
-				ScriptDiagnosticsObserver.OnDiagnosticsStartup -= OnDiagnosticsStartup;
 				ScriptDiagnosticsObserver.OnDiagnosticsShutdown += OnDiagnosticsShutdown;
-				EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-				Selection.selectionChanged += UpdateControllerTargetObject;
 
-				_controller = CreateControllerInstance(rootVisualElement);
-			}
+			_controller = CreateControllerInstance(rootVisualElement);
+			UpdateController();
 		}
 
-		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _)
-		{
-			CreateController();
-			UpdateControllerTargetObject();
-		}
+		private void OnDiagnosticsStartup(ScriptDiagnosticsObserver _) => CreateController();
 
 		private void OnDiagnosticsShutdown(ScriptDiagnosticsObserver _)
 		{
@@ -71,20 +67,20 @@ namespace LunyScript.UnityEditor.Diagnostics
 			ResetController();
 		}
 
-		protected void UpdateControllerTargetObject() => _controller?.OnSelectionChanged(Selection.activeGameObject);
+		protected void UpdateController() => _controller?.SetTargetObject(Selection.activeGameObject);
 		protected void ResetController() => _controller?.Reset();
 
 		protected virtual void OnPlayModeStateChanged(PlayModeStateChange state)
 		{
 			switch (state)
 			{
-				case PlayModeStateChange.EnteredPlayMode:
-					UpdateControllerTargetObject();
-					break;
 				case PlayModeStateChange.ExitingPlayMode:
+				case PlayModeStateChange.EnteredEditMode:
 					ResetController();
 					break;
 			}
+
+			UpdateController();
 		}
 	}
 }

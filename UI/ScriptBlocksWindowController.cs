@@ -1,31 +1,28 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal sealed class ScriptBlocksController : IScriptDiagnosticsController
+	internal sealed class ScriptBlocksWindowController : ScriptDiagnosticsWindowController
 	{
 		// ── Fields ────────────────────────────────────────────────────────
 
-		private readonly VisualElement _root;
 		private readonly TextField _filterField;
 		private readonly Toggle _showEmptyToggle;
 		private readonly TreeView _treeView;
-		private readonly Label _emptyLabel;
 		private readonly List<TreeViewItemData<NodeData>> _rootItems = new();
 
 		private ScriptEventScheduler _scheduler;
-		private String _filterText = String.Empty;
-		private IVisualElementScheduledItem _filterDebounce;
 		private Boolean _showEmpty;
-		private GameObject _selectedGameObject;
 		private Int32 _lastFrameCount = -1;
 		private Int32 _nextNodeId;
 
@@ -45,13 +42,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		// ── Construction ──────────────────────────────────────────────────
 
-		internal ScriptBlocksController(VisualElement root)
+		internal ScriptBlocksWindowController(VisualElement root)
+			: base(root)
 		{
-			_root = root;
 			_filterField = root.Q<TextField>("filter-field");
 			_showEmptyToggle = root.Q<Toggle>("toggle-show-empty");
 			_treeView = root.Q<TreeView>("blocks-tree");
-			_emptyLabel = root.Q<Label>("empty-label");
 			_showEmpty = _showEmptyToggle.value;
 
 			SetupTreeView();
@@ -63,10 +59,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		// ── Public API ────────────────────────────────────────────────────
 
-		void IScriptDiagnosticsController.Reset() => Reset();
-		void IScriptDiagnosticsController.OnSelectionChanged(GameObject go) => OnSelectionChanged(go);
-
-		internal void Reset()
+		internal override void Reset()
 		{
 			_scheduler = null;
 			_rootItems.Clear();
@@ -75,10 +68,10 @@ namespace LunyScript.UnityEditor.Diagnostics
 			UpdateEmptyState();
 		}
 
-		internal void OnSelectionChanged(GameObject go)
+		internal override void SetTarget(GameObject target)
 		{
-			_selectedGameObject = go;
-			RefreshScheduler();
+			base.SetTarget(target);
+			Refresh();
 		}
 
 		internal void OnEditorUpdate()
@@ -111,31 +104,17 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		// ── Scheduler resolution ──────────────────────────────────────────
 
-		private void RefreshScheduler()
+		private void Refresh()
 		{
-			_scheduler = ResolveScheduler(_selectedGameObject);
-			RebuildTree();
+			_scheduler = ResolveScheduler();
+			RebuildView();
 		}
 
-		private ScriptEventScheduler ResolveScheduler(GameObject go)
-		{
-			if (!EditorApplication.isPlaying)
-				return null;
-
-			var scriptEngine = ScriptEngine.Instance;
-			if (scriptEngine == null)
-				return null;
-
-			if (go == null || !go.scene.IsValid())
-				return null;
-
-			var context = scriptEngine.GetScriptContext(go.GetInstanceID()) as ScriptRuntimeContext;
-			return context?.Scheduler;
-		}
+		private ScriptEventScheduler ResolveScheduler() => IsTargetValid() ? ScriptContext?.Scheduler : null;
 
 		// ── Tree building ─────────────────────────────────────────────────
 
-		private void RebuildTree()
+		private void RebuildView()
 		{
 			_nextNodeId = 0;
 			_rootItems.Clear();
@@ -160,7 +139,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 				{
 					var sequences = _scheduler.GetSequences(categoryType, i);
 					var seqChildren = BuildSequenceChildren(sequences);
-
 					if (seqChildren.Count == 0 && !_showEmpty)
 						continue;
 
@@ -312,7 +290,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private void OnShowEmptyChanged(ChangeEvent<Boolean> evt)
 		{
 			_showEmpty = evt.newValue;
-			RebuildTree();
+			RebuildView();
 		}
 
 		private void ApplyFilter()
@@ -380,21 +358,15 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void UpdateEmptyState()
 		{
-			String message = null;
+			UpdateEmptyState(_treeView, ScriptContext != null);
 
-			if (!EditorApplication.isPlaying)
-				message = "Enter Play Mode to inspect script blocks.";
-			else if (_selectedGameObject == null)
-				message = "Select a GameObject.";
-			else if (_scheduler == null)
-				message = "Selected object has no LunyScript.";
-
-			var hasContent = message == null;
-			_treeView.style.display = hasContent ? DisplayStyle.Flex : DisplayStyle.None;
-			_emptyLabel.style.display = hasContent ? DisplayStyle.None : DisplayStyle.Flex;
-
-			if (!hasContent)
-				_emptyLabel.text = message;
+			if (EditorApplication.isPlaying)
+			{
+				if (_target == null)
+					_emptyLabel.text = "Select a GameObject in Hierarchy window.";
+				else if (ScriptContext == null)
+					_emptyLabel.text = "Selected GameObject does not run a LunyScript.";
+			}
 		}
 
 		private Int32 NextId() => _nextNodeId++;
@@ -402,14 +374,14 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private sealed class NodeData
 		{
- 		public enum NodeKind
- 		{
- 			Category,
- 			Event,
- 			Sequence,
- 			Branch,
- 			Block,
- 		}
+			public enum NodeKind
+			{
+				Category,
+				Event,
+				Sequence,
+				Branch,
+				Block,
+			}
 
 			public NodeKind Kind;
 			public String Label;

@@ -2,39 +2,34 @@
 using LunyScript.Diagnostics;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = System.Object;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
-	internal sealed class ScriptVariablesController : IScriptDiagnosticsController
+	internal sealed class ScriptVariablesWindowController : ScriptDiagnosticsWindowController
 	{
-		private readonly VisualElement _root;
 		private readonly TextField _filterField;
 		private readonly Button _btnGlobal;
 		private readonly Button _btnInstance;
 		private readonly MultiColumnListView _listView;
-		private readonly Label _emptyLabel;
 		private readonly List<ScriptVariableState> _viewRows = new();
 
 		private ScriptVariableState[] _masterRows;
 		private ITable _table;
-		private String _filterText = String.Empty;
-		private IVisualElementScheduledItem _filterDebounce;
 		private Boolean _showGlobal;
-		private GameObject _selectedGameObject;
 
 		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.ValueTypeOrdinal;
 
-		internal ScriptVariablesController(VisualElement root)
+		internal ScriptVariablesWindowController(VisualElement root)
+			: base(root)
 		{
-			_root = root;
 			_filterField = root.Q<TextField>("filter-field");
 			_btnGlobal = root.Q<Button>("btn-global");
 			_btnInstance = root.Q<Button>("btn-instance");
 			_listView = root.Q<MultiColumnListView>("variables-list");
-			_emptyLabel = root.Q<Label>("empty-label");
 
 			SetupListView();
 			UpdateEmptyState();
@@ -49,14 +44,14 @@ namespace LunyScript.UnityEditor.Diagnostics
 		{
 			_showGlobal = true;
 			UpdateToggleButtons();
-			RefreshTable();
+			Refresh();
 		}
 
 		private void OnInstanceClicked()
 		{
 			_showGlobal = false;
 			UpdateToggleButtons();
-			RefreshTable();
+			Refresh();
 		}
 
 		private void UpdateToggleButtons()
@@ -65,10 +60,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_btnInstance.EnableInClassList("active-toggle", !_showGlobal);
 		}
 
-		void IScriptDiagnosticsController.Reset() => Reset();
-		void IScriptDiagnosticsController.OnSelectionChanged(GameObject go) => OnSelectionChanged(go);
-
-		internal void Reset()
+		internal override void Reset()
 		{
 			UnsubscribeFromTable();
 			_table = null;
@@ -79,19 +71,19 @@ namespace LunyScript.UnityEditor.Diagnostics
 			UpdateEmptyState();
 		}
 
-		internal void OnSelectionChanged(GameObject go)
+		internal override void SetTarget(GameObject target)
 		{
-			_selectedGameObject = go;
+			base.SetTarget(target);
+
 			_showGlobal = false;
 			UpdateToggleButtons();
-			RefreshTable();
+			Refresh();
 		}
 
-		private void RefreshTable()
+		private void Refresh()
 		{
 			UnsubscribeFromTable();
-			var go = _showGlobal ? null : _selectedGameObject;
-			_table = ResolveTable(go);
+			_table = ResolveTable();
 
 			if (_table != null)
 			{
@@ -105,17 +97,16 @@ namespace LunyScript.UnityEditor.Diagnostics
 			UpdateEmptyState();
 		}
 
-		private ITable ResolveTable(GameObject go)
+		private ITable ResolveTable()
 		{
-			var scriptEngine = ScriptEngine.Instance;
-			if (scriptEngine == null)
-				return null;
+			if (_showGlobal)
+				return ScriptEngine.Instance?.GlobalVariables;
 
-			if (go == null || !go.scene.IsValid())
-				return scriptEngine.GlobalVariables;
+			var table = ScriptContext?.LocalVariables;
+			if (table != null)
+				return table;
 
-			var context = scriptEngine.GetScriptContext(go.GetInstanceID());
-			return context?.LocalVariables;
+			return ScriptEngine.Instance?.GlobalVariables;
 		}
 
 		private ScriptVariableState[] BuildMasterRows(ITable table)
@@ -189,9 +180,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			var ascending = desc.direction == SortDirection.Ascending;
 
 			if (desc.columnName == "name")
-			{
 				_viewRows.Sort((a, b) => ascending ? a.CompareNameTo(b) : b.CompareNameTo(a));
-			}
 			else if (desc.columnName == "value")
 			{
 				_viewRows.Sort((a, b) =>
@@ -286,12 +275,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_listView.RefreshItems();
 		}
 
-		private void UpdateEmptyState()
-		{
-			var hasTable = _table != null;
-			_listView.style.display = hasTable ? DisplayStyle.Flex : DisplayStyle.None;
-			_emptyLabel.style.display = hasTable ? DisplayStyle.None : DisplayStyle.Flex;
-		}
+		private void UpdateEmptyState() => UpdateEmptyState(_listView, EditorApplication.isPlaying);
 
 		private void UnsubscribeFromTable()
 		{

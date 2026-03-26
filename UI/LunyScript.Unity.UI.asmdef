@@ -1,16 +1,13 @@
 {
-    "name": "LunyScript.UnityEditor",
-    "rootNamespace": "LunyScript.UnityEditor",
+    "name": "LunyScript.Unity.UI",
+    "rootNamespace": "",
     "references": [
         "GUID:d8105533248dd994a834ff6858cf7898",
-        "GUID:94165753badb19e478ca442e77858430",
+        "GUID:04220f546f37c3844b2def871a4913e7",
         "GUID:d3eaacbbd31dbfe4bbd3a9bce5c65632",
-        "GUID:91bc321d79ae8794397fcd53c71f777c",
-        "GUID:47b4dec366b32d349a5c800651912a8c"
+        "GUID:91bc321d79ae8794397fcd53c71f777c"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

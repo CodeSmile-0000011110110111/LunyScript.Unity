@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/ScriptVariablesWindow.uss?fileID=7433441132597879392&amp;guid=ceef48b9794b44788aa6de5569a80830&amp;type=3#ScriptVariablesWindow"/>
+    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptVariablesWindow.uss?fileID=7433441132597879392&amp;guid=ceef48b9794b44788aa6de5569a80830&amp;type=3#ScriptVariablesWindow"/>
     <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
         <ui:VisualElement name="toolbar" style="flex-direction: row;">
             <ui:TextField name="filter-field" placeholder-text="Filter by name..." style="flex-grow: 1;"/>
@@ -15,6 +15,6 @@
                 <ui:Column name="timestamp" title="Frame" width="80" sortable="true"/>
             </ui:Columns>
         </ui:MultiColumnListView>
-        <ui:Label name="empty-label" text="Not in PlayMode or no Luny-scripted object selected." style="display: none;"/>
+        <ui:Label name="empty-label" text="Not in PlayMode " style="display: none;"/>
     </ui:VisualElement>
 </ui:UXML>

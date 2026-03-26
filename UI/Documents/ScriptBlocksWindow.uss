@@ -9,3 +9,9 @@
 .filtered-out {
     color: rgba(180, 180, 180, 0.5);
 }
+/* Empty-state label: centered, muted */
+#empty-label {
+    -unity-text-align: middle-center;
+    color: rgba(180, 180, 180, 0.6);
+    margin-top: 16px;
+}
