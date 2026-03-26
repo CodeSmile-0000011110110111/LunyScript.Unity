@@ -1,11 +1,9 @@
-﻿using Luny;
-using Luny.Engine.Bridge;
+﻿using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -35,7 +33,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			foreach (var seq in sequences)
 			{
 				if (seq != null)
-					count += seq.Blocks.Count;
+					count += seq.BlockCount;
 			}
 			return count;
 		}
@@ -91,13 +89,14 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void SetupTreeView()
 		{
+			const Boolean showNodeKind = false; // debug toggle
+
 			_treeView.makeItem = () => new Label { style = { flexGrow = 1 } };
 			_treeView.bindItem = (element, index) =>
 			{
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
-				((Label)element).text = data.Kind == NodeData.NodeKind.Block
-					? data.BlockState.DisplayString
-					: data.Label;
+				var text = data.Kind == NodeData.NodeKind.Block ? data.BlockState.DisplayString : data.Label;
+				((Label)element).text = showNodeKind ? $"[{data.Kind}] {text}" : text;
 				element.EnableInClassList("filtered-out", data.IsFilteredOut);
 			};
 		}
@@ -196,7 +195,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 				result.Add(new TreeViewItemData<NodeData>(
 					NextId(),
-					new NodeData { Kind = NodeData.NodeKind.Event, Label = actionName },
+					new NodeData { Kind = NodeData.NodeKind.Event, Label = $"\"{actionName}\"" },
 					phaseChildren.Count > 0 ? phaseChildren : null));
 			}
 			return result;
@@ -238,6 +237,13 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			if (block is IBlockContainer container)
 			{
+				if (block is ILogicalOperatorBlock)
+				{
+					// Skip [Block] node; the single branch node IS the meaningful representation
+					var branches = BuildContainerChildren(container);
+					return branches.Count > 0 ? branches[0] : new TreeViewItemData<NodeData>(NextId(), nodeData);
+				}
+
 				var containerChildren = BuildContainerChildren(container);
 				return new TreeViewItemData<NodeData>(NextId(), nodeData, containerChildren.Count > 0 ? containerChildren : null);
 			}
@@ -255,9 +261,17 @@ namespace LunyScript.UnityEditor.Diagnostics
 			for (var i = 0; i < maxCount; i++)
 			{
 				if (i < condCount)
-					result.Add(BuildBranchNode(container.GetConditionSequenceName(i), container.GetConditionSequence(i)));
+				{
+					var sequence = container.GetConditionSequence(i);
+					if (sequence != null)
+						result.Add(BuildBranchNode(container.GetConditionSequenceName(i), sequence));
+				}
 				if (i < actCount)
-					result.Add(BuildBranchNode(container.GetActionSequenceName(i), container.GetActionSequence(i)));
+				{
+					var sequence = container.GetActionSequence(i);
+					if (sequence != null)
+						result.Add(BuildBranchNode(container.GetActionSequenceName(i), sequence));
+				}
 			}
 
 			return result;

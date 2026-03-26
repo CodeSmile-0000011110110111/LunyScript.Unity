@@ -8,7 +8,7 @@
                 <ui:Button name="btn-instance" text="Instance"/>
             </ui:RadioButtonGroup>
         </ui:VisualElement>
-        <ui:MultiColumnListView name="variables-list" show-alternating-row-backgrounds="ContentOnly" sorting-mode="Custom" fixed-item-height="22" style="flex-grow: 1;">
+        <ui:MultiColumnListView name="variables-list" show-alternating-row-backgrounds="ContentOnly" sorting-mode="Custom" fixed-item-height="18" horizontal-scrolling="true" style="flex-grow: 1; -unity-text-align: middle-left;">
             <ui:Columns>
                 <ui:Column name="name" title="Name" stretchable="true" sortable="true"/>
                 <ui:Column name="value" title="Value" stretchable="true" sortable="true"/>
