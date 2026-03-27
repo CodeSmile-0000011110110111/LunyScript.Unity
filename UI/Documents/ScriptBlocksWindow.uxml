@@ -1,11 +1,17 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptBlocksWindow.uss?fileID=7433441132597879392&amp;guid=a802f3de1cf6437ab806f4c65243e84d&amp;type=3"/>
+    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptBlocksWindow.uss?fileID=7433441132597879392&amp;guid=a802f3de1cf6437ab806f4c65243e84d&amp;type=3#ScriptBlocksWindow"/>
     <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
         <ui:VisualElement name="toolbar" style="flex-direction: row;">
             <ui:TextField name="filter-field" placeholder-text="Filter by block name..." style="flex-grow: 1;"/>
-            <ui:Toggle name="toggle-show-empty" label="Show Empty"/>
+            <ui:Toggle name="toggle-show-events" label="Show Events"/>
         </ui:VisualElement>
-        <ui:TreeView name="blocks-tree" horizontal-scrolling="true" auto-expand="true" fixed-item-height="18" style="flex-grow: 1; -unity-text-align: middle-left; flex-shrink: 1;"/>
+        <ui:MultiColumnTreeView name="blocks-tree" horizontal-scrolling="true" auto-expand="true" fixed-item-height="18" sorting-enabled="true" sorting-mode="Custom" style="flex-grow: 1; flex-shrink: 1;">
+            <ui:Columns primary-column-name="event-blocks" reorderable="false">
+                <ui:Column name="event-blocks" title="Event Blocks" stretchable="true" optional="false" sortable="true"/>
+                <ui:Column name="location" title="Location" width="200" min-width="50" resizable="true" sortable="true"/>
+            </ui:Columns>
+            <ui:SortColumnDescriptions/>
+        </ui:MultiColumnTreeView>
         <ui:Label name="empty-label" text="Not in PlayMode" style="display: none;"/>
     </ui:VisualElement>
 </ui:UXML>
