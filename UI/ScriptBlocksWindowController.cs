@@ -1,12 +1,15 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = System.Object;
 
 namespace LunyScript.UnityEditor.Diagnostics
 {
@@ -38,6 +41,18 @@ namespace LunyScript.UnityEditor.Diagnostics
 			return count;
 		}
 
+		private static void TryOpenFile(NodeData data)
+		{
+			var trace = data.BlockState?.Block?.Trace;
+			if (trace?.Count == 0)
+				return;
+
+			var frame = trace[0];
+			InternalEditorUtility.OpenFileAtLineExternal(frame.FullPath, frame.Line, frame.Column);
+		}
+
+		private static String GetRootItemName(Type categoryType) => categoryType.Name.TrimStart("Luny").TrimEnd("Event");
+
 		// ── Construction ──────────────────────────────────────────────────
 
 		internal ScriptBlocksWindowController(VisualElement root)
@@ -46,6 +61,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_filterField = root.Q<TextField>("filter-field");
 			_showEmptyToggle = root.Q<Toggle>("toggle-show-empty");
 			_treeView = root.Q<TreeView>("blocks-tree");
+			_treeView.itemsChosen += OnItemsChosen;
 			_showEmpty = _showEmptyToggle.value;
 
 			SetupTreeView();
@@ -53,6 +69,15 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 			_filterField.RegisterValueChangedCallback(OnFilterChanged);
 			_showEmptyToggle.RegisterValueChangedCallback(OnShowEmptyChanged);
+		}
+
+		private void OnItemsChosen(IEnumerable<Object> items)
+		{
+			foreach (var item in items)
+			{
+				if (item is NodeData data)
+					TryOpenFile(data);
+			}
 		}
 
 		// ── Public API ────────────────────────────────────────────────────
@@ -129,6 +154,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private void PopulateRootItems(List<TreeViewItemData<NodeData>> rootItems)
 		{
+			BuildEventChildren(rootItems);
+			BuildInputActionEventChildren(rootItems);
+		}
+
+		private void BuildEventChildren(List<TreeViewItemData<NodeData>> rootItems)
+		{
 			foreach (var categoryType in ScriptEventScheduler.RegisteredCategories)
 			{
 				var categoryChildren = new List<TreeViewItemData<NodeData>>();
@@ -137,121 +168,93 @@ namespace LunyScript.UnityEditor.Diagnostics
 				for (var i = 0; i < enumNames.Length; i++)
 				{
 					var sequences = _scheduler.GetSequences(categoryType, i);
-					var seqChildren = BuildSequenceChildren(sequences);
-					if (seqChildren.Count == 0 && !_showEmpty)
+					var sequenceChildren = BuildBlockSequenceChildren(sequences);
+					if (sequenceChildren.Count == 0 && !_showEmpty)
 						continue;
 
-					var blockCount = CountBlocksInSequences(sequences);
-					var eventLabel = blockCount > 0 ? $"{enumNames[i]} [{blockCount} Block(s)]" : enumNames[i];
-					categoryChildren.Add(new TreeViewItemData<NodeData>(
-						NextId(),
-						new NodeData { Kind = NodeData.NodeKind.Event, Label = eventLabel },
-						seqChildren.Count > 0 ? seqChildren : null));
+					categoryChildren.Add(CreateTreeItem(enumNames[i], NodeData.NodeKind.Event, sequenceChildren));
 				}
 
 				if (categoryChildren.Count == 0 && !_showEmpty)
 					continue;
 
-				rootItems.Add(new TreeViewItemData<NodeData>(
-					NextId(),
-					new NodeData { Kind = NodeData.NodeKind.Category, Label = categoryType.Name },
-					categoryChildren.Count > 0 ? categoryChildren : null));
-			}
-
-			var inputActionChildren = BuildInputActionChildren();
-			if (inputActionChildren.Count > 0 || _showEmpty)
-			{
-				rootItems.Add(new TreeViewItemData<NodeData>(
-					NextId(),
-					new NodeData { Kind = NodeData.NodeKind.Category, Label = nameof(LunyInputActionEvent) },
-					inputActionChildren.Count > 0 ? inputActionChildren : null));
+				rootItems.Add(CreateTreeItem(GetRootItemName(categoryType), NodeData.NodeKind.Category, categoryChildren));
 			}
 		}
 
-		private List<TreeViewItemData<NodeData>> BuildInputActionChildren()
+		private void BuildInputActionEventChildren(List<TreeViewItemData<NodeData>> rootItems)
 		{
-			var result = new List<TreeViewItemData<NodeData>>();
+			var inputActionChildren = new List<TreeViewItemData<NodeData>>();
+
 			foreach (var actionName in _scheduler.GetInputActionNames())
 			{
 				var phaseChildren = new List<TreeViewItemData<NodeData>>();
 				foreach (LunyInputActionPhase phase in Enum.GetValues(typeof(LunyInputActionPhase)))
 				{
 					var sequences = _scheduler.GetInputActionEventSequences(actionName, phase);
-					var seqChildren = BuildSequenceChildren(sequences);
-
-					if (seqChildren.Count == 0 && !_showEmpty)
+					var sequenceChildren = BuildBlockSequenceChildren(sequences);
+					if (sequenceChildren.Count == 0 && !_showEmpty)
 						continue;
 
-					var blockCount = CountBlocksInSequences(sequences);
-					var phaseLabel = blockCount > 0 ? $"{phase} [{blockCount} Block(s)]" : phase.ToString();
-					phaseChildren.Add(new TreeViewItemData<NodeData>(
-						NextId(),
-						new NodeData { Kind = NodeData.NodeKind.Event, Label = phaseLabel },
-						seqChildren.Count > 0 ? seqChildren : null));
+					phaseChildren.Add(CreateTreeItem(phase.ToString(), NodeData.NodeKind.Event, sequenceChildren));
 				}
 
 				if (phaseChildren.Count == 0 && !_showEmpty)
 					continue;
 
-				result.Add(new TreeViewItemData<NodeData>(
-					NextId(),
-					new NodeData { Kind = NodeData.NodeKind.Event, Label = $"\"{actionName}\"" },
-					phaseChildren.Count > 0 ? phaseChildren : null));
+				inputActionChildren.Add(CreateTreeItem($"\"{actionName}\"", NodeData.NodeKind.Event, phaseChildren));
 			}
-			return result;
+
+			if (inputActionChildren.Count > 0 || _showEmpty)
+				rootItems.Add(CreateTreeItem(GetRootItemName(typeof(LunyInputActionEvent)), NodeData.NodeKind.Category, inputActionChildren));
 		}
 
-		private List<TreeViewItemData<NodeData>> BuildSequenceChildren(IEnumerable<ISequenceBlock> sequences)
+		private List<TreeViewItemData<NodeData>> BuildBlockSequenceChildren(IEnumerable<ISequenceBlock> sequences)
 		{
 			var result = new List<TreeViewItemData<NodeData>>();
 			if (sequences == null)
 				return result;
 
-			foreach (var seq in sequences)
+			foreach (var sequence in sequences)
 			{
-				if (seq == null)
+				if (sequence == null)
 					continue;
 
 				var blockChildren = new List<TreeViewItemData<NodeData>>();
-				foreach (var block in seq.Blocks)
+				foreach (var block in sequence.Blocks)
 				{
 					if (block == null)
 						continue;
 
-					blockChildren.Add(BuildBlockNode(block));
+					blockChildren.Add(BuildBlockChildren(block));
 				}
 
-				var seqLabel = $"{seq.GetType().Name} [{seq.Blocks.Count} block(s)]";
-				result.Add(new TreeViewItemData<NodeData>(
-					NextId(),
-					new NodeData { Kind = NodeData.NodeKind.Sequence, Label = seqLabel },
-					blockChildren.Count > 0 ? blockChildren : null));
+				result.Add(CreateTreeItem(sequence.ToString(), NodeData.NodeKind.Sequence, blockChildren));
 			}
 			return result;
 		}
 
-		private TreeViewItemData<NodeData> BuildBlockNode(ScriptBlock block)
+		private TreeViewItemData<NodeData> BuildBlockChildren(ScriptBlock block)
 		{
 			var state = new ScriptBlockState(block);
-			var nodeData = new NodeData { Kind = NodeData.NodeKind.Block, BlockState = state };
 
 			if (block is IBlockContainer container)
 			{
 				if (block is ILogicalOperatorBlock)
 				{
 					// Skip [Block] node; the single branch node IS the meaningful representation
-					var branches = BuildContainerChildren(container);
-					return branches.Count > 0 ? branches[0] : new TreeViewItemData<NodeData>(NextId(), nodeData);
+					var branches = BuildBlockContainerChildren(container);
+					return branches.Count > 0 ? branches[0] : CreateTreeItem(null, NodeData.NodeKind.Block, null, state);
 				}
 
-				var containerChildren = BuildContainerChildren(container);
-				return new TreeViewItemData<NodeData>(NextId(), nodeData, containerChildren.Count > 0 ? containerChildren : null);
+				var containerChildren = BuildBlockContainerChildren(container);
+				return CreateTreeItem(null, NodeData.NodeKind.Block, containerChildren, state);
 			}
 
-			return new TreeViewItemData<NodeData>(NextId(), nodeData);
+			return CreateTreeItem(null, NodeData.NodeKind.Block, null, state);
 		}
 
-		private List<TreeViewItemData<NodeData>> BuildContainerChildren(IBlockContainer container)
+		private List<TreeViewItemData<NodeData>> BuildBlockContainerChildren(IBlockContainer container)
 		{
 			var result = new List<TreeViewItemData<NodeData>>();
 			var condCount = container.ConditionSequenceCount;
@@ -264,33 +267,39 @@ namespace LunyScript.UnityEditor.Diagnostics
 				{
 					var sequence = container.GetConditionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBranchNode(container.GetConditionSequenceName(i), sequence));
+						result.Add(BuildBlockContainerBranch(container.GetConditionSequenceName(i), sequence));
 				}
 				if (i < actCount)
 				{
 					var sequence = container.GetActionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBranchNode(container.GetActionSequenceName(i), sequence));
+						result.Add(BuildBlockContainerBranch(container.GetActionSequenceName(i), sequence));
 				}
 			}
 
 			return result;
 		}
 
-		private TreeViewItemData<NodeData> BuildBranchNode(String name, IEnumerable<IScriptBlock> blocks)
+		private TreeViewItemData<NodeData> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks)
 		{
 			var children = new List<TreeViewItemData<NodeData>>();
 			foreach (var block in blocks)
 			{
 				if (block is ScriptBlock sb)
-					children.Add(BuildBlockNode(sb));
+					children.Add(BuildBlockChildren(sb));
 			}
 
-			return new TreeViewItemData<NodeData>(
-				NextId(),
-				new NodeData { Kind = NodeData.NodeKind.Branch, Label = name },
-				children.Count > 0 ? children : null);
+			return CreateTreeItem(name, NodeData.NodeKind.Branch, children);
 		}
+
+		private TreeViewItemData<NodeData> CreateTreeItem(String label, NodeData.NodeKind nodeKind, List<TreeViewItemData<NodeData>> children,
+			ScriptBlockState state = null) => new(NextNodeId(), new NodeData
+			{
+				Label = label,
+				Kind = nodeKind,
+				BlockState = state,
+			},
+			children?.Count > 0 ? children : null);
 
 		// ── Filter ────────────────────────────────────────────────────────
 
@@ -383,7 +392,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			}
 		}
 
-		private Int32 NextId() => _nextNodeId++;
+		private Int32 NextNodeId() => _nextNodeId++;
 		// ── Node model ────────────────────────────────────────────────────
 
 		private sealed class NodeData
@@ -401,6 +410,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 			public String Label;
 			public ScriptBlockState BlockState; // non-null only for Block nodes
 			public Boolean IsFilteredOut;
+
+			public override String ToString() => $"{Kind}: {Label} => {BlockState}";
 		}
 	}
 }
