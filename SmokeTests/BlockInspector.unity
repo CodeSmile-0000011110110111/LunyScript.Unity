@@ -6005,7 +6005,7 @@ GameObject:
   - component: {fileID: 1843929370}
   - component: {fileID: 1843929369}
   m_Layer: 0
-  m_Name: README <== Select, then view Inspector
+  m_Name: README <== See Inspector Note
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

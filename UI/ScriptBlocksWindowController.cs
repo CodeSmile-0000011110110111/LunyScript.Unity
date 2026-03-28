@@ -17,7 +17,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 	{
 		// ── TreeView setup ────────────────────────────────────────────────
 
-		private const Boolean ShowNodeKind = true; // debug toggle
+		private const Boolean ShowNodeKind = false; // debug toggle
 
 		// ── Fields ────────────────────────────────────────────────────────
 
@@ -76,6 +76,40 @@ namespace LunyScript.UnityEditor.Diagnostics
 			});
 
 			return result;
+		}
+
+		private static FontStyle GetFontStyle(NodeData data)
+		{
+			if (data.Kind == NodeData.NodeKind.Event || data.Kind == NodeData.NodeKind.Sequence)
+				return FontStyle.Bold;
+
+			var block = data.BlockState?.Block;
+			if (block is IBlockContainer && data.Kind != NodeData.NodeKind.Branch)
+				return FontStyle.Bold;
+
+			return FontStyle.Normal;
+		}
+
+		private static Color GetBlockColor(NodeData data)
+		{
+			if (data.Kind == NodeData.NodeKind.Event)
+				return Color.softYellow;
+			if (data.Kind == NodeData.NodeKind.Sequence)
+				return Color.gold;
+			if (data.Kind == NodeData.NodeKind.Branch)
+				return Color.pink;
+
+			var block = data.BlockState?.Block;
+			if (block is IBlockContainer)
+				return Color.blanchedAlmond;
+			if (block is ILogicalOperator)
+				return Color.springGreen;
+			if (block is ConditionBlock)
+				return Color.lightGreen;
+			if (block is ActionBlock)
+				return Color.powderBlue;
+
+			return Color.white;
 		}
 
 		// ── Construction ──────────────────────────────────────────────────
@@ -141,8 +175,20 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_treeView.columns["event-blocks"].bindCell = (element, index) =>
 			{
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
-				var text = !String.IsNullOrEmpty(data.Label) ? data.Label : data.BlockState.DisplayString;
-				((Label)element).text = ShowNodeKind ? $"[{data.Kind}] {text}" : text;
+				var text = data.Kind == NodeData.NodeKind.Sequence || data.Kind == NodeData.NodeKind.Block
+					? data.BlockState?.GetDisplayString(ScriptContext) ?? data.Label
+					: data.Label;
+				if (data.IsConditionBranch)
+				{
+					var label = data.BlockState?.GetBranchLabel(ScriptContext, data.BranchIndex);
+					if (!string.IsNullOrEmpty(label))
+						text = label;
+				}
+				if (ShowNodeKind)
+					text = $"[{data.Kind}] {text}";
+				((Label)element).text = text;
+				element.style.unityFontStyleAndWeight = GetFontStyle(data);
+				element.style.color = GetBlockColor(data);
 				element.EnableInClassList("filtered-out", data.IsFilteredOut);
 			};
 
@@ -294,7 +340,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		{
 			if (block is IBlockContainer container)
 			{
-				if (block is ILogicalOperatorBlock)
+				if (block is ILogicalOperator)
 				{
 					// Skip [Block] node; the single branch node IS the meaningful representation
 					var branches = BuildBlockContainerChildren(container);
@@ -321,20 +367,21 @@ namespace LunyScript.UnityEditor.Diagnostics
 				{
 					var sequence = container.GetConditionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBlockContainerBranch(container.GetConditionSequenceName(i), sequence, container));
+						result.Add(BuildBlockContainerBranch(container.GetConditionSequenceName(i), sequence, container, i, true));
 				}
 				if (i < actCount)
 				{
 					var sequence = container.GetActionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBlockContainerBranch(container.GetActionSequenceName(i), sequence, container));
+						result.Add(BuildBlockContainerBranch(container.GetActionSequenceName(i), sequence, container, i, false));
 				}
 			}
 
 			return result;
 		}
 
-		private TreeViewItemData<NodeData> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks, IBlockContainer container)
+		private TreeViewItemData<NodeData> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks, IBlockContainer container,
+			Int32 branchIndex, Boolean isCondition)
 		{
 			var children = new List<TreeViewItemData<NodeData>>();
 			foreach (var block in blocks)
@@ -343,15 +390,17 @@ namespace LunyScript.UnityEditor.Diagnostics
 					children.Add(BuildBlockChildren(sb));
 			}
 
-			return CreateTreeItem(name, NodeData.NodeKind.Branch, children, (ScriptBlock)container);
+			return CreateTreeItem(name, NodeData.NodeKind.Branch, children, (ScriptBlock)container, branchIndex, isCondition);
 		}
 
 		private TreeViewItemData<NodeData> CreateTreeItem(String label, NodeData.NodeKind nodeKind, List<TreeViewItemData<NodeData>> children,
-			IScriptBlock block) => new(NextNodeId(), new NodeData
+			IScriptBlock block, Int32 branchIndex = -1, Boolean isCondition = false) => new(NextNodeId(), new NodeData
 			{
 				Label = label,
 				Kind = nodeKind,
 				BlockState = block is ScriptBlock b ? new ScriptBlockState(b) : null,
+				BranchIndex = branchIndex,
+				IsConditionBranch = isCondition,
 			},
 			children?.Count > 0 ? children : null);
 
@@ -463,6 +512,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 			public String Label;
 			public ScriptBlockState BlockState; // non-null only for Block nodes
 			public Boolean IsFilteredOut;
+			public Int32 BranchIndex;
+			public Boolean IsConditionBranch;
 
 			public override String ToString() => $"{Kind}: {Label} => {BlockState}";
 		}
