@@ -17,7 +17,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 	{
 		// ── TreeView setup ────────────────────────────────────────────────
 
-		private const Boolean ShowNodeKind = false; // debug toggle
+		private const Boolean ShowNodeKind = true; // debug toggle
 
 		// ── Fields ────────────────────────────────────────────────────────
 
@@ -43,17 +43,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 				InternalEditorUtility.OpenFileAtLineExternal(path, frame.Line, frame.Column);
 		}
 
-		private static String GetRootItemName(Type categoryType) => categoryType.Name.TrimStart("Luny").TrimEnd("Event");
-
-		private static String GetLocationString(NodeData data)
-		{
-			var fileName = data.BlockState?.FileName;
-			return fileName != null ? $"Line {data.BlockState.Line} in {fileName}" : String.Empty;
-		}
+		private static String GetLocationString(NodeData data) =>
+			data.BlockState?.FileName != null ? $"{data.BlockState?.FileName}:{data.BlockState.Line}" : String.Empty;
 
 		private static String GetLineNumber(NodeData data) => data.BlockState?.Line > 0 ? data.BlockState.Line.ToString() : "?";
-
 		private static String GetFileName(NodeData data) => data.BlockState?.FileName != null ? data.BlockState.FileName : "unknown";
+		private static String GetRootItemName(Type categoryType) => categoryType.Name.TrimStart("Luny").TrimEnd("Event");
 
 		private static List<TreeViewItemData<NodeData>> SortItemsRecursive(IEnumerable<TreeViewItemData<NodeData>> items,
 			Func<NodeData, String> keySelector, Boolean ascending)
@@ -146,7 +141,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_treeView.columns["event-blocks"].bindCell = (element, index) =>
 			{
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
-				var text = data.BlockState != null ? data.BlockState.DisplayString : data.Label;
+				var text = !String.IsNullOrEmpty(data.Label) ? data.Label : data.BlockState.DisplayString;
 				((Label)element).text = ShowNodeKind ? $"[{data.Kind}] {text}" : text;
 				element.EnableInClassList("filtered-out", data.IsFilteredOut);
 			};
@@ -326,20 +321,20 @@ namespace LunyScript.UnityEditor.Diagnostics
 				{
 					var sequence = container.GetConditionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBlockContainerBranch(container.GetConditionSequenceName(i), sequence));
+						result.Add(BuildBlockContainerBranch(container.GetConditionSequenceName(i), sequence, container));
 				}
 				if (i < actCount)
 				{
 					var sequence = container.GetActionSequence(i);
 					if (sequence != null)
-						result.Add(BuildBlockContainerBranch(container.GetActionSequenceName(i), sequence));
+						result.Add(BuildBlockContainerBranch(container.GetActionSequenceName(i), sequence, container));
 				}
 			}
 
 			return result;
 		}
 
-		private TreeViewItemData<NodeData> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks)
+		private TreeViewItemData<NodeData> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks, IBlockContainer container)
 		{
 			var children = new List<TreeViewItemData<NodeData>>();
 			foreach (var block in blocks)
@@ -348,7 +343,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 					children.Add(BuildBlockChildren(sb));
 			}
 
-			return CreateTreeItem(name, NodeData.NodeKind.Branch, children, null);
+			return CreateTreeItem(name, NodeData.NodeKind.Branch, children, (ScriptBlock)container);
 		}
 
 		private TreeViewItemData<NodeData> CreateTreeItem(String label, NodeData.NodeKind nodeKind, List<TreeViewItemData<NodeData>> children,
