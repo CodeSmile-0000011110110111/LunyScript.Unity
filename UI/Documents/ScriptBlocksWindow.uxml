@@ -6,9 +6,10 @@
             <ui:Toggle name="toggle-show-events" label="Show Events"/>
         </ui:VisualElement>
         <ui:MultiColumnTreeView name="blocks-tree" horizontal-scrolling="true" auto-expand="true" fixed-item-height="18" sorting-enabled="true" sorting-mode="Custom" style="flex-grow: 1; flex-shrink: 1;">
-            <ui:Columns primary-column-name="event-blocks" reorderable="false">
-                <ui:Column name="event-blocks" title="Event Blocks" stretchable="true" optional="false" sortable="true"/>
-                <ui:Column name="location" title="Location" width="200" min-width="50" resizable="true" sortable="true"/>
+            <ui:Columns primary-column-name="event-blocks" reorderable="false" sortable="true">
+                <ui:Column name="event-blocks" title="Event Blocks" stretchable="true" optional="false" />
+                <ui:Column name="line-number" title="Line" />
+                <ui:Column name="file-name" title="File" width="200px" />
             </ui:Columns>
             <ui:SortColumnDescriptions/>
         </ui:MultiColumnTreeView>

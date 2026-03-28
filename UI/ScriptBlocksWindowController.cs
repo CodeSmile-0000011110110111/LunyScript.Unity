@@ -48,8 +48,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 		private static String GetLocationString(NodeData data)
 		{
 			var fileName = data.BlockState?.FileName;
-			return fileName != null ? $"{fileName} line {data.BlockState.Line}" : String.Empty;
+			return fileName != null ? $"Line {data.BlockState.Line} in {fileName}" : String.Empty;
 		}
+
+		private static String GetLineNumber(NodeData data) => data.BlockState?.Line > 0 ? data.BlockState.Line.ToString() : "?";
+
+		private static String GetFileName(NodeData data) => data.BlockState?.FileName != null ? data.BlockState.FileName : "unknown";
 
 		private static List<TreeViewItemData<NodeData>> SortItemsRecursive(IEnumerable<TreeViewItemData<NodeData>> items,
 			Func<NodeData, String> keySelector, Boolean ascending)
@@ -147,11 +151,20 @@ namespace LunyScript.UnityEditor.Diagnostics
 				element.EnableInClassList("filtered-out", data.IsFilteredOut);
 			};
 
-			_treeView.columns["location"].makeCell = () => new Label { style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
-			_treeView.columns["location"].bindCell = (element, index) =>
+			_treeView.columns["line-number"].makeCell = () => new Label { style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
+			_treeView.columns["line-number"].bindCell = (element, index) =>
 			{
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
-				((Label)element).text = GetLocationString(data);
+				((Label)element).text = GetLineNumber(data);
+				((Label)element).style.unityTextAlign = TextAnchor.MiddleRight;
+				element.EnableInClassList("filtered-out", data.IsFilteredOut);
+			};
+
+			_treeView.columns["file-name"].makeCell = () => new Label { style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
+			_treeView.columns["file-name"].bindCell = (element, index) =>
+			{
+				var data = _treeView.GetItemDataForIndex<NodeData>(index);
+				((Label)element).text = GetFileName(data);
 				element.EnableInClassList("filtered-out", data.IsFilteredOut);
 			};
 
