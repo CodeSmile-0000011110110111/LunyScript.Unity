@@ -322,7 +322,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 				if (sequence == null)
 					continue;
 
-				var blockChildren = new List<TreeViewItemData<NodeData>>();
+				var children = new List<TreeViewItemData<NodeData>>();
 				foreach (var block in sequence.Blocks)
 				{
 					if (block == null)
@@ -335,27 +335,28 @@ namespace LunyScript.UnityEditor.Diagnostics
 						if (block is ILogicalOperator)
 						{
 							if (branches.Count > 0)
-								blockChildren.Add(branches[0]);
+								children.Add(branches[0]);
 							else
-								blockChildren.Add(CreateTreeItem(nameof(ILogicalOperator), NodeData.NodeKind.Block, null, block));
+								children.Add(CreateTreeItem(nameof(ILogicalOperator), NodeData.NodeKind.Block, null, block));
 						}
 						else
 						{
 							foreach (var branch in branches)
-								blockChildren.Add(branch);
+								children.Add(branch);
 						}
 					}
 					else
-						blockChildren.Add(BuildBlockChildren(block));
+						children.Add(BuildBlockChildren(block));
 				}
 
-				items.Add(CreateTreeItem(sequence.ToString(), NodeData.NodeKind.Sequence, blockChildren, sequence));
+				items.Add(CreateTreeItem(sequence.ToString(), NodeData.NodeKind.Sequence, children, sequence));
 			}
 			return items;
 		}
 
-		private TreeViewItemData<NodeData> BuildBlockChildren(ScriptBlock block) =>
-			/*if (block is IBlockContainer container)
+		private TreeViewItemData<NodeData> BuildBlockChildren(ScriptBlock block)
+		{
+			if (block is IBlockContainer container)
 			{
 				var branches = BuildBlockContainerChildren(container);
 
@@ -364,8 +365,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 					return branches.Count > 0 ? branches[0] : CreateTreeItem(null, NodeData.NodeKind.Block, null, block);
 
 				return CreateTreeItem(null, NodeData.NodeKind.Block, branches, block); // should be NodeKind.Container
-			}*/
-			CreateTreeItem(null, NodeData.NodeKind.Block, null, block);
+			}
+			return CreateTreeItem(null, NodeData.NodeKind.Block, null, block);
+		}
 
 		private List<TreeViewItemData<NodeData>> BuildBlockContainerChildren(IBlockContainer container)
 		{
@@ -421,10 +423,10 @@ namespace LunyScript.UnityEditor.Diagnostics
 			return result;
 		}
 
-		private List<TreeViewItemData<NodeData>> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> blocks)
+		private List<TreeViewItemData<NodeData>> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> sequence)
 		{
 			var children = new List<TreeViewItemData<NodeData>>();
-			foreach (var block in blocks)
+			foreach (var block in sequence)
 			{
 				if (block is ScriptBlock sb)
 					children.Add(BuildBlockChildren(sb));
