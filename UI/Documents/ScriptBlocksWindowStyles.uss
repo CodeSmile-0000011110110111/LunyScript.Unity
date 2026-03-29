@@ -1,0 +1,5 @@
+@import url("DiagnosticsWindowStyles.uss");
+
+.filtered-out {
+    color: rgba(180, 180, 180, 0.5);
+}

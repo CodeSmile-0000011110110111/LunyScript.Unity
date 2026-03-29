@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptVariablesWindow.uss?fileID=7433441132597879392&amp;guid=ceef48b9794b44788aa6de5569a80830&amp;type=3#ScriptVariablesWindow"/>
+    <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptVariablesWindowStyles.uss?fileID=7433441132597879392&amp;guid=ceef48b9794b44788aa6de5569a80830&amp;type=3#ScriptVariablesWindowStyles"/>
     <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
         <ui:VisualElement name="toolbar" style="flex-direction: row;">
             <ui:TextField name="filter-field" placeholder-text="Filter by name..." style="flex-grow: 1;"/>
@@ -8,7 +8,7 @@
                 <ui:Button name="btn-instance" text="Instance"/>
             </ui:RadioButtonGroup>
         </ui:VisualElement>
-        <ui:MultiColumnListView name="variables-list" show-alternating-row-backgrounds="ContentOnly" sorting-mode="Custom" fixed-item-height="18" horizontal-scrolling="true" style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Packages/de.codesmile.lunyscript/3rdParty/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf?fileID=12800000&amp;guid=19cf8533de8266741b6fec461827e098&amp;type=3#FiraCode-Regular&quot;);">
+        <ui:MultiColumnListView name="variables-list" show-alternating-row-backgrounds="ContentOnly" sorting-mode="Custom" fixed-item-height="18" horizontal-scrolling="true" style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Packages/de.codesmile.lunyscript/3rdParty/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf?fileID=12800000&amp;guid=19cf8533de8266741b6fec461827e098&amp;type=3#FiraCode-Regular&quot;); font-size: 11px;">
             <ui:Columns>
                 <ui:Column name="name" title="Name" stretchable="true" sortable="true"/>
                 <ui:Column name="value" title="Value" stretchable="true" sortable="true"/>

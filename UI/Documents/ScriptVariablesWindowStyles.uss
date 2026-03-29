@@ -1,4 +1,6 @@
-﻿/* Constant variable rows: subtle warm-amber background */
+﻿@import url("DiagnosticsWindowStyles.uss");
+
+/* Constant variable rows: subtle warm-amber background */
 .constant-row {
     background-color: rgba(200, 150, 40, 0.12);
 }
@@ -7,13 +9,6 @@
 .name-cell,
 .timestamp-cell {
     pointer-events: none;
-}
-
-/* Empty-state label: centered, muted */
-#empty-label {
-    -unity-text-align: middle-center;
-    color: rgba(180, 180, 180, 0.6);
-    margin-top: 16px;
 }
 
 /* This targets the RadioButtonGroup to get horizontal layout */

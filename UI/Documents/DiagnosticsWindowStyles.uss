@@ -1,0 +1,6 @@
+#empty-label {
+    -unity-text-align: middle-center;
+    color: rgba(200, 200, 180, 0.6);
+    margin-top: 32px;
+    font-size: 16px;
+}
