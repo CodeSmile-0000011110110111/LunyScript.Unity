@@ -1,12 +1,13 @@
-﻿using Luny;
+﻿#if UNITY_EDITOR
+using UnityEditorInternal;
+#endif
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = System.Object;
@@ -37,10 +38,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 			if (trace == null || trace.Count == 0)
 				return;
 
+#if UNITY_EDITOR
 			var frame = trace[0];
 			var path = frame.FullPath;
 			if (path != null)
 				InternalEditorUtility.OpenFileAtLineExternal(path, frame.Line, frame.Column);
+#endif
 		}
 
 		private static String GetLocationString(NodeData data) =>
@@ -158,7 +161,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		internal void OnEditorUpdate()
 		{
-			if (!EditorApplication.isPlaying)
+			if (!Application.isPlaying)
 				return;
 
 			var frameCount = Time.frameCount;
@@ -528,7 +531,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 		{
 			UpdateEmptyState(_treeView, ScriptContext != null);
 
-			if (EditorApplication.isPlaying)
+			if (Application.isPlaying)
 			{
 				if (_target == null)
 					_emptyLabel.text = "Select a GameObject in Hierarchy window.";

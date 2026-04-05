@@ -15,12 +15,11 @@ namespace LunyScript.UnityEditor
 
 public partial class $CLASSNAME$ : Script
 {
-	public override void Build(ScriptContext context)
+	public override void Build(ScriptBuildContext context)
 	{
 		On.Ready(Debug.Log($""Hello, {nameof($CLASSNAME$)}""));
 	}
-}
-";
+}";
 
 		[MenuItem("Assets/Create/Luny Script", priority = -222)]
 		[MenuItem("Assets/Create/Scripting/Luny Script", priority = -140)]
@@ -48,17 +47,14 @@ public partial class $CLASSNAME$ : Script
 		{
 			try
 			{
-				// 1. Create the file with your template content
 				var className = Path.GetFileNameWithoutExtension(assetPath).Replace(" ", "");
 				var script = s_DefaultLunyScript.Replace("$CLASSNAME$", className);
 				script = SetLineEndings(script, EditorSettings.lineEndingsForNewScripts);
 
-				LunyLogger.LogWarning($"Writing: {script}");
 				File.WriteAllText(assetPath, script);
-				AssetDatabase.ImportAsset(assetPath);
+				AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceSynchronousImport);
 
 				var scriptAsset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
-				LunyLogger.LogWarning($"Asset: {scriptAsset}, {scriptAsset.name}, {scriptAsset.GetType().FullName}");
 				ProjectWindowUtil.ShowCreatedAsset(scriptAsset);
 			}
 			catch (Exception e)

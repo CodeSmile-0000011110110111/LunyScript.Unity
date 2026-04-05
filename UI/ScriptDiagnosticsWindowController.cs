@@ -1,6 +1,5 @@
 ﻿using LunyScript.Unity.UI;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -35,9 +34,9 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_scriptContext = null;
 		}
 
-		protected void UpdateEmptyState(VisualElement content, bool hasContent)
+		protected void UpdateEmptyState(VisualElement content, Boolean hasContent)
 		{
-			if (!EditorApplication.isPlaying)
+			if (!Application.isPlaying)
 				_emptyLabel.text = "Enter Play Mode to view diagnostics.";
 
 			content.style.display = hasContent ? DisplayStyle.Flex : DisplayStyle.None;
@@ -45,6 +44,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 		}
 
 		protected Boolean IsTargetValid() =>
-			EditorApplication.isPlaying && ScriptEngine.Instance != null && _target != null && _target.scene.IsValid();
+			Application.isPlaying && ScriptEngine.Instance != null && _target != null && _target.scene.IsValid();
 	}
 }

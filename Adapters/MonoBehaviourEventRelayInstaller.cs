@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace LunyScript.Unity.Adapters
 {
-	internal sealed class LunyScriptMonoBehaviourEventRelayInstaller
+	internal sealed class MonoBehaviourEventRelayInstaller
 	{
 		internal void Initialize()
 		{
 			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
-			scriptEngine.OnScriptBuilt += OnScriptBuilt;
+			if (scriptEngine == null)
+				ScriptEngine.OnScriptEngineInitialized += OnScriptEngineInitialized;
+			else
+				scriptEngine.OnScriptBuilt += OnScriptBuilt;
 		}
+
+		private void OnScriptEngineInitialized(IScriptEngine scriptEngine) =>
+			((IScriptEngineInternal)scriptEngine).OnScriptBuilt += OnScriptBuilt;
 
 		internal void Shutdown()
 		{

@@ -2,7 +2,6 @@
 using LunyScript.Diagnostics;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = System.Object;
@@ -275,7 +274,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_listView.RefreshItems();
 		}
 
-		private void UpdateEmptyState() => UpdateEmptyState(_listView, EditorApplication.isPlaying);
+		private void UpdateEmptyState() => UpdateEmptyState(_listView, Application.isPlaying);
 
 		private void UnsubscribeFromTable()
 		{

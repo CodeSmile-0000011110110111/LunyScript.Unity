@@ -11,7 +11,7 @@ namespace LunyScript.Unity.Adapters
 	[DisallowMultipleComponent]
 	internal sealed class LunyScriptUnityAdapter : MonoBehaviour
 	{
-		private LunyScriptMonoBehaviourEventRelayInstaller _eventRelayInstaller;
+		private MonoBehaviourEventRelayInstaller _eventRelayInstaller;
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		private static void OnBeforeSceneLoad()
@@ -20,9 +20,9 @@ namespace LunyScript.Unity.Adapters
 			engineAdapter.gameObject.AddComponent<LunyScriptUnityAdapter>();
 		}
 
-		private void Awake()
+		private void Start()
 		{
-			_eventRelayInstaller = new LunyScriptMonoBehaviourEventRelayInstaller();
+			_eventRelayInstaller = new MonoBehaviourEventRelayInstaller();
 			_eventRelayInstaller.Initialize();
 		}
 
