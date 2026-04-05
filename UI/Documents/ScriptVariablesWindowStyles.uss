@@ -8,7 +8,6 @@
 /* Name and timestamp cells are read-only — suppress pointer interaction */
 .name-cell,
 .timestamp-cell {
-    pointer-events: none;
 }
 
 /* This targets the RadioButtonGroup to get horizontal layout */
