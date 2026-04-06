@@ -7,7 +7,7 @@ namespace LunyScript.UnityEditor
 	{
 		public override PreserveDetails[] GetPreserveDetails()
 		{
-			// preserve all user scripts across assemblies (any scripts in Editor assemblies will not be in build)
+			// preserve all Luny scripts across assemblies (scripts in Editor assemblies will not end up in builds)
 			var details = PreserveAllDerivedClasses<Script>();
 			return details.ToArray();
 		}
