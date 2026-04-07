@@ -40,9 +40,9 @@ namespace LunyScript.Unity.Blocks
 
 		private ComponentEnableBlock(Type componentType) => _componentType = componentType;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var go = runtimeContext.LunyObject.Cast<GameObject>();
+			var go = context.LunyObject.Cast<GameObject>();
 			SetComponentEnabled(go, _componentType, true);
 		}
 
@@ -59,9 +59,9 @@ namespace LunyScript.Unity.Blocks
 
 		private ComponentDisableBlock(Type componentType) => _componentType = componentType;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var go = runtimeContext.LunyObject.Cast<GameObject>();
+			var go = context.LunyObject.Cast<GameObject>();
 			ComponentEnableBlock.SetComponentEnabled(go, _componentType, false);
 		}
 
