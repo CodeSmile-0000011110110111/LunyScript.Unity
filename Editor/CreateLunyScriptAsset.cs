@@ -47,7 +47,10 @@ public partial class $CLASSNAME$ : Script
 		{
 			try
 			{
-				var className = Path.GetFileNameWithoutExtension(assetPath).Replace(" ", "");
+				var className = Path.GetFileNameWithoutExtension(assetPath).SanitizeIdentifier();
+				var directoryName = Path.GetDirectoryName(assetPath);
+				assetPath = $"{directoryName}/{className}.cs";
+
 				var script = s_DefaultLunyScript.Replace("$CLASSNAME$", className);
 				script = SetLineEndings(script, EditorSettings.lineEndingsForNewScripts);
 
