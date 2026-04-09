@@ -179,7 +179,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
 				var text = data.Kind == NodeData.NodeKind.Sequence || data.Kind == NodeData.NodeKind.Block
 					? data.BlockState?.GetDisplayString(ScriptContext) ?? data.Label + " (DisplayString is null)"
-					: $"🟢 {data.Label}";
+					: data.Label;
 				if (data.IsConditionBranch)
 				{
 					var label = data.BlockState?.GetBranchLabel(ScriptContext, data.BranchIndex);
@@ -414,10 +414,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 				}
 				else if (actionChildren != null)
 				{
-					// special case: For() omits Do() branch
-					if (condCount == 0)
-						return actionChildren;
-
 					result.Add(CreateTreeItem(actionBranchLabel, NodeData.NodeKind.Branch, actionChildren, block, i));
 				}
 			}
