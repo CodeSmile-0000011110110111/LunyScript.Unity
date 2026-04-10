@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditorInternal;
 #endif
-using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
@@ -50,7 +49,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 
 		private static String GetLineNumber(NodeData data) => data.BlockState?.Line > 0 ? data.BlockState.Line.ToString() : "?";
 		private static String GetFileName(NodeData data) => data.BlockState?.FileName != null ? data.BlockState.FileName : "unknown";
-		private static String GetRootItemName(Type categoryType) => categoryType.Name.TrimStart("Luny").TrimEnd("Event");
 
 		private static List<TreeViewItemData<NodeData>> SortItemsRecursive(IEnumerable<TreeViewItemData<NodeData>> items,
 			Func<NodeData, String> keySelector, Boolean ascending)
@@ -410,10 +408,19 @@ namespace LunyScript.UnityEditor.Diagnostics
 					// collate actions in same list with conditions
 					if (actionChildren != null)
 						conditionChildren.AddRange(actionChildren);
+
+					// reduce nesting
+					if (block is WhileBlock)
+						return conditionChildren;
+
 					result.Add(CreateTreeItem(conditionBranchLabel, NodeData.NodeKind.Branch, conditionChildren, block, i, true));
 				}
 				else if (actionChildren != null)
 				{
+					// reduce nesting
+					if (block is ForBlock)
+						return actionChildren;
+
 					result.Add(CreateTreeItem(actionBranchLabel, NodeData.NodeKind.Branch, actionChildren, block, i));
 				}
 			}
@@ -544,7 +551,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 			{
 				Event,
 				Sequence,
-				Container,
 				Branch,
 				Block,
 			}
