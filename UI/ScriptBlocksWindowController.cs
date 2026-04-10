@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditorInternal;
 #endif
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
@@ -346,7 +347,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 						}
 					}
 					else
-						children.Add(BuildBlockChildren(block));
+						children.AddRange(BuildBlockChildren(block));
 				}
 
 				items.Add(CreateTreeItem(sequence.ToString(), NodeData.NodeKind.Sequence, children, sequence));
@@ -354,19 +355,29 @@ namespace LunyScript.UnityEditor.Diagnostics
 			return items;
 		}
 
-		private TreeViewItemData<NodeData> BuildBlockChildren(ScriptBlock block)
+		private List<TreeViewItemData<NodeData>> BuildBlockChildren(ScriptBlock block)
 		{
+			var items = new List<TreeViewItemData<NodeData>>();
 			if (block is IBlockContainer container)
 			{
 				var branches = BuildBlockContainerChildren(container);
 
-				// the single branch node IS the meaningful representation
-				if (block is ILogicalOperator)
-					return branches.Count > 0 ? branches[0] : CreateTreeItem(null, NodeData.NodeKind.Block, null, block);
+				// avoid additional nesting
+				if (block is IfBlock or WhileBlock or ForBlock)
+					items = branches;
+				else
+				{
+					// the single branch node IS the meaningful representation
+					if (block is ILogicalOperator)
+						items.Add(branches.Count > 0 ? branches[0] : CreateTreeItem(null, NodeData.NodeKind.Block, null, block));
 
-				return CreateTreeItem(null, NodeData.NodeKind.Block, branches, block); // should be NodeKind.Container
+					items.Add(CreateTreeItem(null, NodeData.NodeKind.Block, branches, block)); // should be NodeKind.Container?
+				}
 			}
-			return CreateTreeItem(null, NodeData.NodeKind.Block, null, block);
+			else
+				items.Add(CreateTreeItem(null, NodeData.NodeKind.Block, null, block));
+
+			return items;
 		}
 
 		private List<TreeViewItemData<NodeData>> BuildBlockContainerChildren(IBlockContainer container)
@@ -376,6 +387,8 @@ namespace LunyScript.UnityEditor.Diagnostics
 			var actCount = container.ActionSequenceCount;
 			var maxCount = Math.Max(condCount, actCount);
 			var block = (ScriptBlock)container;
+
+			LunyLogger.LogWarning($"{block}, cond: {condCount}, act: {actCount}", this);
 
 			for (var i = 0; i < maxCount; i++)
 			{
@@ -390,7 +403,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 					if (sequence != null)
 					{
 						conditionBranchLabel = container.GetConditionSequenceName(i);
-						conditionChildren = BuildBlockContainerBranch(conditionBranchLabel, sequence);
+						conditionChildren = BuildBlockContainerBranch(sequence);
 					}
 				}
 				if (i < actCount)
@@ -399,7 +412,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 					if (sequence != null)
 					{
 						actionBranchLabel = container.GetActionSequenceName(i);
-						actionChildren = BuildBlockContainerBranch(actionBranchLabel, sequence);
+						actionChildren = BuildBlockContainerBranch(sequence);
 					}
 				}
 
@@ -409,32 +422,25 @@ namespace LunyScript.UnityEditor.Diagnostics
 					if (actionChildren != null)
 						conditionChildren.AddRange(actionChildren);
 
-					// reduce nesting
-					if (block is WhileBlock)
-						return conditionChildren;
-
 					result.Add(CreateTreeItem(conditionBranchLabel, NodeData.NodeKind.Branch, conditionChildren, block, i, true));
 				}
 				else if (actionChildren != null)
-				{
-					// reduce nesting
-					if (block is ForBlock)
-						return actionChildren;
-
 					result.Add(CreateTreeItem(actionBranchLabel, NodeData.NodeKind.Branch, actionChildren, block, i));
-				}
 			}
 
 			return result;
 		}
 
-		private List<TreeViewItemData<NodeData>> BuildBlockContainerBranch(String name, IEnumerable<IScriptBlock> sequence)
+		private List<TreeViewItemData<NodeData>> BuildBlockContainerBranch(IEnumerable<IScriptBlock> sequence)
 		{
 			var children = new List<TreeViewItemData<NodeData>>();
 			foreach (var block in sequence)
 			{
 				if (block is ScriptBlock sb)
-					children.Add(BuildBlockChildren(sb));
+				{
+					var childBlocks = BuildBlockChildren(sb);
+					children.AddRange(childBlocks);
+				}
 			}
 
 			return children;
