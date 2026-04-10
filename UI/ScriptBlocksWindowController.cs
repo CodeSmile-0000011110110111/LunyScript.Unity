@@ -103,12 +103,12 @@ namespace LunyScript.UnityEditor.Diagnostics
 			var block = data.BlockState?.Block;
 			if (block is IBlockContainer)
 				return Color.blanchedAlmond;
-			if (block is ILogicalOperator)
-				return Color.springGreen;
+			// if (block is ILogicalOperator)
+			// 	return Color.lightGreen;
 			if (block is ConditionBlock)
 				return Color.lightGreen;
 			if (block is ActionBlock)
-				return Color.powderBlue;
+				return new Color(0.9f, 0.64f, 1f);
 
 			return Color.white;
 		}
@@ -176,14 +176,19 @@ namespace LunyScript.UnityEditor.Diagnostics
 			_treeView.columns["event-blocks"].bindCell = (element, index) =>
 			{
 				var data = _treeView.GetItemDataForIndex<NodeData>(index);
+				var blockState = data.BlockState;
 				var text = data.Kind == NodeData.NodeKind.Sequence || data.Kind == NodeData.NodeKind.Block
-					? data.BlockState?.GetDisplayString(ScriptContext) ?? data.Label + " (DisplayString is null)"
+					? blockState?.GetDisplayString(ScriptContext) ?? data.Label + " (DisplayString is null)"
 					: data.Label;
 				if (data.IsConditionBranch)
 				{
-					var label = data.BlockState?.GetBranchLabel(ScriptContext, data.BranchIndex);
+					var label = blockState?.GetBranchLabel(ScriptContext, data.BranchIndex);
 					if (!String.IsNullOrEmpty(label))
 						text = label;
+				}
+				else if (data.Kind == NodeData.NodeKind.Branch && blockState?.Block is IfBlock && data.Label == "Else")
+				{
+					text = blockState?.GetIfBlockElseLabel(ScriptContext);
 				}
 				if (ShowNodeKind)
 					text = $"[{data.Kind}] {text}";
@@ -387,8 +392,6 @@ namespace LunyScript.UnityEditor.Diagnostics
 			var actCount = container.ActionSequenceCount;
 			var maxCount = Math.Max(condCount, actCount);
 			var block = (ScriptBlock)container;
-
-			LunyLogger.LogWarning($"{block}, cond: {condCount}, act: {actCount}", this);
 
 			for (var i = 0; i < maxCount; i++)
 			{
