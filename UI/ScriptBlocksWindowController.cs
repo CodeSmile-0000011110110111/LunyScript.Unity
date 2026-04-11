@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditorInternal;
 #endif
-using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Diagnostics;
@@ -101,10 +100,10 @@ namespace LunyScript.UnityEditor.Diagnostics
 				return Color.blanchedAlmond;
 
 			var block = data.BlockState?.Block;
+			if (block is RunBlock runBlock && (runBlock.Trace?.Frames[0].Name?.StartsWith("//") ?? false))
+				return Color.gray7;
 			if (block is IBlockContainer)
 				return Color.blanchedAlmond;
-			// if (block is ILogicalOperator)
-			// 	return Color.lightGreen;
 			if (block is ConditionBlock)
 				return Color.lightGreen;
 			if (block is ActionBlock)
@@ -187,9 +186,7 @@ namespace LunyScript.UnityEditor.Diagnostics
 						text = label;
 				}
 				else if (data.Kind == NodeData.NodeKind.Branch && blockState?.Block is IfBlock && data.Label == "Else")
-				{
 					text = blockState?.GetIfBlockElseLabel(ScriptContext);
-				}
 				if (ShowNodeKind)
 					text = $"[{data.Kind}] {text}";
 				((Label)element).text = text;
