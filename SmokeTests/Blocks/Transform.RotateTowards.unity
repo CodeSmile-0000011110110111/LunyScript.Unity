@@ -660,7 +660,7 @@ GameObject:
   m_Component:
   - component: {fileID: 480744332}
   m_Layer: 0
-  m_Name: Transform_RotateTowards_SmokeTest
+  m_Name: Transform_LookAt_SmokeTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -698,7 +698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &572517027
 Transform:
   m_ObjectHideFlags: 0
@@ -1007,7 +1007,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &796783469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1948,7 +1948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1347485167}
   m_Layer: 0
-  m_Name: Transform_RotateTowards_Lerp_SmokeTest
+  m_Name: Transform_LookAt_Lerp_SmokeTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2162,7 +2162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1720151467}
   m_Layer: 0
-  m_Name: Transform_RotateTowards_Slerp_SmokeTest
+  m_Name: Transform_LookAt_Slerp_SmokeTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2396,7 +2396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1854474617
 Transform:
   m_ObjectHideFlags: 0
@@ -2980,7 +2980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1974353594
 Transform:
   m_ObjectHideFlags: 0
