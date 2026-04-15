@@ -20,9 +20,6 @@ namespace LunyScript
 
 		private void OnValidate() => UpdateRotation();
 		private void Update() => transform.localRotation *= _rotation;
-		private void UpdateRotation()
-		{
-			_rotation = Quaternion.Euler(_angles * _timeScale);
-		}
+		private void UpdateRotation() => _rotation = Quaternion.Euler(_angles * _timeScale);
 	}
 }

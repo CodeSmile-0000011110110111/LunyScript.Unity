@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = System.Object;
 
 namespace LunyScript.SmokeTests
 {
@@ -37,14 +38,14 @@ namespace LunyScript.SmokeTests
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 
-		private void OnVariableChanged(System.Object sender, VariableChangedArgs changedVar)
+		private void OnVariableChanged(Object sender, VariableChangedArgs changedVar)
 		{
 			if (changedVar.Name.StartsWith("Time."))
 				return;
 
 			LunyLogger.LogInfo($"{changedVar}", this);
 
- 		var pass = changedVar.Handle is Table.VarHandle h && h.Variable.AsBoolean();
+			var pass = changedVar.Handle is Table.VarHandle h && h.Variable.AsBoolean();
 			if (changedVar.Name == nameof(Assert_Runs_OnCreated))
 				Assert_Runs_WhenCreated_Passed = pass;
 			else if (changedVar.Name == nameof(Assert_Runs_OnDestroyed))
