@@ -30,8 +30,17 @@ namespace LunyScript.Unity
 
 		private void Awake()
 		{
-			_table = null; // ensure table gets rebuilt in playmode
+			ResetTable(); // ensure table gets rebuilt in playmode
 			RegisterScriptInstantiated();
+		}
+
+		private void OnEnable()
+		{
+			if (_table != null && _table.Has("InspectorValue"))
+			{
+				var v = _table["InspectorValue"];
+				LunyLogger.LogWarning(v);
+			}
 		}
 
 		private void OnDestroy() => UnregisterScriptInstantiated();
@@ -51,10 +60,10 @@ namespace LunyScript.Unity
 
 			RegisterScriptBuilt();
 		}
+
 		private void OnScriptBuilt(ScriptRuntimeContext ctx)
 		{
 			UnregisterScriptBuilt();
-
 
 			LunyLogger.LogInfo($"Table after build: {_table}", ctx.LunyObject);
 		}
@@ -85,25 +94,36 @@ namespace LunyScript.Unity
 				scriptEngine.OnScriptBuilt -= OnScriptBuilt;
 		}
 
+		internal void ResetTable() => _table = null;
+
 		private Table BuildTable()
 		{
 			var table = new Table();
 			foreach (var v in _variables)
 			{
-				if (!String.IsNullOrEmpty(v.Name))
-				{
-					if (!table.Has(v.Name))
-					{
-						var varHandle = table.DefineVariable(v.Name, v.ToVariable());
-						v.SetVarHandle(varHandle);
-					}
-					else
-					{
-						LunyLogger.LogWarning($"Variable named '{v.Name}' already exists");
-					}
-				}
+				if (String.IsNullOrEmpty(v.Name))
+					continue;
+
+				var uniqueName = EnsureUniqueName(v, table);
+				table.DefineVariable(uniqueName, v.ToVariable());
 			}
+
 			return table;
+		}
+
+		private static String EnsureUniqueName(InspectorVariable v, Table table)
+		{
+			var renameCount = 0;
+			var uniqueName = v.Name.Trim();
+			while (table.Has(uniqueName))
+			{
+				uniqueName = $"{v.Name} ({++renameCount})";
+			}
+
+			if (v.Name != uniqueName)
+				v.Name = uniqueName;
+
+			return uniqueName;
 		}
 
 		/// <summary>
@@ -117,29 +137,6 @@ namespace LunyScript.Unity
 
 			_table ??= BuildTable();
 			return _table;
-		}
-
-		/// <summary>
-		/// Adds a variable to the serialized list (edit-mode use).
-		/// </summary>
-		internal void AddVariable(InspectorVariable variable)
-		{
-			_variables.Add(variable);
-			_table = null;
-		}
-
-		/// <summary>
-		/// Removes a variable by name from the serialized list (edit-mode use).
-		/// </summary>
-		internal Boolean RemoveVariable(String name)
-		{
-			var index = _variables.FindIndex(v => v.Name == name);
-			if (index < 0)
-				return false;
-
-			_variables.RemoveAt(index);
-			_table = null;
-			return true;
 		}
 	}
 }

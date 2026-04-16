@@ -445,6 +445,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 964606965}
+  - component: {fileID: 964606966}
   m_Layer: 0
   m_Name: Variable_Comparisons_SmokeTest
   m_TagString: Untagged
@@ -467,6 +468,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &964606966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964606964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d5003a0e4b40a3a39834deec3adea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
+  _variables:
+  - Name: newVar
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (1)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (2)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
 --- !u!1 &1669966022
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +545,37 @@ MonoBehaviour:
   - Name: InspectorValue
     Type: 0
     BoolValue: 0
-    NumberValue: 121110.98765432101
+    NumberValue: 33
+    TextValue: 
+  - Name: sdasd
+    Type: 2
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: xss
+  - Name: newVar
+    Type: 0
+    BoolValue: 1
+    NumberValue: 4
+    TextValue: 4
+  - Name: newVar (1)
+    Type: 3
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: dd
+  - Name: newVar (2)
+    Type: 1
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (3)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: sdfsfsdfsdf
+    Type: 0
+    BoolValue: 0
+    NumberValue: 4
     TextValue: 
 --- !u!114 &1669966025
 MonoBehaviour:

@@ -1,0 +1,12 @@
+﻿@import url("DiagnosticsWindowStyles.uss");
+
+/* Constant variable rows: subtle warm-amber background */
+.constant-row {
+    background-color: rgba(200, 150, 40, 0.12);
+}
+
+/* Toolbar add/remove buttons */
+#toolbar .unity-button {
+    min-width: 22px;
+    padding: 0 4px;
+}
