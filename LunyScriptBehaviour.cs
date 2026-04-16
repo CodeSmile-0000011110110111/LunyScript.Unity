@@ -1,17 +1,13 @@
-﻿using Luny;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace LunyScript.Unity
 {
+	[RequireComponent(typeof(LunyScriptVariables))]
 	public sealed class LunyScriptBehaviour : MonoBehaviour
 	{
-		[SerializeField] private ScriptInspectorData _data = new();
-
-		private void Awake()
+		private void Start()
 		{
-			var entityId = (Int32)GetEntityId();
-			var scriptContext = ScriptEngine.Instance.GetScriptContext(entityId);
 
 		}
 	}
