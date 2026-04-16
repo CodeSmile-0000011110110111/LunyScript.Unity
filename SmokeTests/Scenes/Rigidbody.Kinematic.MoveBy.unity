@@ -1236,18 +1236,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70495fc261945908ce9f6578cbb2c27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Luny.Unity::Luny.Unity.Components.Note
-  Text: 'Camera LookAt motion was added to visualize that the motion is smooth. For
-    Rigidbody Kinematic motion it''s a common complaint that motion jitters/stutters
-    or is "not smooth". The key points are:
-
-
-    - Tracked Target''s Rigidbody must
-    have Interpolation enabled
-
-    - Cinemachine Camera must use SmartUpdate (default)
-    or LateUpdate
-
-'
+  Text: "Camera LookAt motion was added to visualize that the motion is smooth. For
+    Rigidbody Kinematic motion it's a common complaint that motion jitters/stutters
+    or is \"not smooth\". The key points are:\n\n- Tracked Target's Rigidbody must
+    have Interpolation enabled\n- Rigidbody.MovePosition/MoveRotation must be used
+    for Kinematic motion, and nothing else\n  - No other motion must be applied,
+    neither transform changes nor manual velocity changes\n  - Motion must be applied
+    in FixedUpdate, not Update!\n- Cinemachine Camera must use SmartUpdate (default)
+    or LateUpdate"
   Kind: 1
 --- !u!1 &347540058
 GameObject:
