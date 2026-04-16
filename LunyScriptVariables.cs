@@ -16,18 +16,23 @@ namespace LunyScript.Unity
 		[SerializeField] private List<InspectorVariable> _variables = new();
 
 		private Table _table;
+		private WeakReference<ScriptRuntimeContext> _runtimeContextRef;
 
 		/// <summary>
 		/// The live Table — valid in edit-mode and after Awake in play-mode.
 		/// </summary>
-		public ITable Table => _table ??= BuildTable();
+		internal ITable Table => _table ??= BuildTable();
 
 		/// <summary>
 		/// Read-only access to the serialized variable descriptors (for Inspector rendering).
 		/// </summary>
-		public IReadOnlyList<InspectorVariable> Variables => _variables;
+		internal IReadOnlyList<InspectorVariable> Variables => _variables;
 
-		private void Awake() => RegisterScriptInstantiated();
+		private void Awake()
+		{
+			_table = null; // ensure table gets rebuilt in playmode
+			RegisterScriptInstantiated();
+		}
 
 		private void OnDestroy() => UnregisterScriptInstantiated();
 
@@ -37,10 +42,21 @@ namespace LunyScript.Unity
 
 			if (ctx is ScriptRuntimeContext runtimeContext)
 			{
+				_runtimeContextRef = new WeakReference<ScriptRuntimeContext>(runtimeContext);
+
 				var table = TryGetTable();
 				if (table != null)
 					runtimeContext.SetLocalVariables(table);
 			}
+
+			RegisterScriptBuilt();
+		}
+		private void OnScriptBuilt(ScriptRuntimeContext ctx)
+		{
+			UnregisterScriptBuilt();
+
+
+			LunyLogger.LogInfo($"Table after build: {_table}", ctx.LunyObject);
 		}
 
 		private void RegisterScriptInstantiated()
@@ -54,6 +70,19 @@ namespace LunyScript.Unity
 			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
 			if (scriptEngine != null)
 				scriptEngine.OnScriptInstantiated -= OnScriptInstantiated;
+		}
+
+		private void RegisterScriptBuilt()
+		{
+			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
+			scriptEngine.OnScriptBuilt += OnScriptBuilt;
+		}
+
+		private void UnregisterScriptBuilt()
+		{
+			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
+			if (scriptEngine != null)
+				scriptEngine.OnScriptBuilt -= OnScriptBuilt;
 		}
 
 		private Table BuildTable()
