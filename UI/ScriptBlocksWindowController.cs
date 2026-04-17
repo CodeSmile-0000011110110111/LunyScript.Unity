@@ -179,14 +179,16 @@ namespace LunyScript.UnityEditor.Diagnostics
 				var text = data.Kind == NodeData.NodeKind.Sequence || data.Kind == NodeData.NodeKind.Block
 					? blockState?.GetDisplayString(ScriptContext) ?? data.Label + " (DisplayString is null)"
 					: data.Label;
-				if (data.IsConditionBranch)
+
+				if (data.Kind == NodeData.NodeKind.Branch && blockState?.Block is IfBlock)
+					text = blockState.GetIfBlockBranchLabel(ScriptContext, data.BranchIndex);
+				else if (data.IsConditionBranch)
 				{
 					var label = blockState?.GetBranchLabel(ScriptContext, data.BranchIndex);
 					if (!String.IsNullOrEmpty(label))
 						text = label;
 				}
-				else if (data.Kind == NodeData.NodeKind.Branch && blockState?.Block is IfBlock && data.Label == "Else")
-					text = blockState?.GetIfBlockElseLabel(ScriptContext);
+
 				if (ShowNodeKind)
 					text = $"[{data.Kind}] {text}";
 				((Label)element).text = text;

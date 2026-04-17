@@ -3,6 +3,7 @@ using LunyScript.Diagnostics;
 using LunyScript.Unity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -25,11 +26,38 @@ namespace LunyScript.UnityEditor
 		private VisualElement _root;
 
 		private ScriptVariableState[] _masterRows;
-		private Int32 _lastSelectedIndex = -1;
 		private String _focusedRowName;
 		private ITable _table;
 
 		private static Int32 GetValueTypeOrdinal(ScriptVariableState row) => row.ValueTypeOrdinal;
+
+		private void Awake() => EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+		private void OnDisable()
+		{
+			UnsubscribeFromTable();
+			_focusedRowName = null;
+		}
+
+		private void OnDestroy() => EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+
+		private void OnPlayModeStateChanged(PlayModeStateChange state)
+		{
+			ScriptEngine.OnScriptEngineInitialized -= OnScriptEngineInitialized;
+			if (state == PlayModeStateChange.EnteredPlayMode)
+			{
+				if (ScriptEngine.Instance == null)
+					ScriptEngine.OnScriptEngineInitialized += OnScriptEngineInitialized;
+				else
+					Refresh();
+			}
+		}
+
+		private void OnScriptEngineInitialized(IScriptEngine obj)
+		{
+			ScriptEngine.OnScriptEngineInitialized -= OnScriptEngineInitialized;
+			EditorApplication.delayCall += () => Refresh();
+		}
 
 		public override VisualElement CreateInspectorGUI()
 		{
@@ -47,9 +75,6 @@ namespace LunyScript.UnityEditor
 			_btnAdd.clicked += OnAddClicked;
 			_btnRemove.clicked += OnRemoveClicked;
 
-			// Row selection via list view's built-in selection
-			_listView.selectionChanged += OnSelectionChanged;
-
 			// Play-mode: refresh every 500ms to pick up script-defined variables
 			_root.schedule.Execute(OnEditorUpdate).Every(500);
 
@@ -59,16 +84,10 @@ namespace LunyScript.UnityEditor
 			return _root;
 		}
 
-		private void OnSelectionChanged(IEnumerable<Object> selection)
-		{
-			_lastSelectedIndex = _listView.selectedIndex;
-			Debug.Log($"[DEBUG_LOG] OnSelectionChanged: _lastSelectedIndex={_lastSelectedIndex}");
-		}
-
 		private void OnEditorUpdate()
 		{
-			if (Application.isPlaying)
-				Refresh();
+			// if (Application.isPlaying)
+			// 	Refresh();
 		}
 
 		private void OnSerializedObjectChanged(SerializedObject so)
@@ -89,6 +108,8 @@ namespace LunyScript.UnityEditor
 			if (!Application.isPlaying)
 				component.ResetTable();
 			_table = component.Table;
+
+			Debug.Log($"Table: {_table} Target: {component.name} ({component.GetEntityId()}) on {component.gameObject.name} ({component.gameObject.GetEntityId()})");
 
 			if (_table != null)
 			{
@@ -135,6 +156,8 @@ namespace LunyScript.UnityEditor
 
 		private void RebuildView()
 		{
+			//Debug.LogWarning(nameof(RebuildView));
+
 			_viewRows.Clear();
 
 			if (_masterRows != null)
@@ -205,6 +228,8 @@ namespace LunyScript.UnityEditor
 
 			if (!Application.isPlaying)
 				tf.RegisterValueChangedCallback(OnNameFieldChanged);
+
+			EnsureCellInputSelectsRow(element, index);
 		}
 
 		private void UnbindNameCell(VisualElement element, Int32 index)
@@ -288,7 +313,8 @@ namespace LunyScript.UnityEditor
 					});
 					tf.RegisterValueChangedCallback(evt =>
 					{
-						Debug.Log($"[DEBUG_LOG] TextField value changed — name={row.Name}, newValue={evt.newValue}, focusController={tf.focusController != null}");
+						Debug.Log(
+							$"[DEBUG_LOG] TextField value changed — name={row.Name}, newValue={evt.newValue}, focusController={tf.focusController != null}");
 						varHandle.Variable = evt.newValue;
 					});
 					valueElement = tf;
@@ -297,6 +323,8 @@ namespace LunyScript.UnityEditor
 
 			container.Add(valueElement);
 			container.EnableInClassList("constant-row", row.IsConstant);
+
+			EnsureCellInputSelectsRow(container, index);
 		}
 
 		private void BindTypeCell(VisualElement container, Int32 index)
@@ -339,6 +367,8 @@ namespace LunyScript.UnityEditor
 				Refresh();
 			});
 			container.Add(enumField);
+
+			EnsureCellInputSelectsRow(container, index);
 		}
 
 		private void SyncToInspectorVariable(String name, Variable variable)
@@ -386,32 +416,50 @@ namespace LunyScript.UnityEditor
 			newElem.FindPropertyRelative("TextValue").stringValue = String.Empty;
 			so.ApplyModifiedProperties();
 			Refresh();
+
+			_listView.ClearSelection();
+			_listView.SetSelection(_viewRows.Count - 1);
+			_listView.ScrollToItem(_viewRows.Count - 1);
 		}
 
 		private void OnRemoveClicked()
 		{
-			if (_lastSelectedIndex < 0 || _lastSelectedIndex >= _viewRows.Count)
-			{
-				Debug.Log($"[DEBUG_LOG] OnRemoveClicked: no valid selection (_lastSelectedIndex={_lastSelectedIndex}, count={_viewRows.Count})");
+			var selectedItemsCount = _listView.selectedIndices.Count();
+			if (selectedItemsCount == 0)
 				return;
-			}
 
-			var selected = _viewRows[_lastSelectedIndex];
-			Debug.Log($"[DEBUG_LOG] OnRemoveClicked: removing '{selected.Name}' at index {_lastSelectedIndex}");
 			var so = serializedObject;
 			so.Update();
 			var varsProp = so.FindProperty("_variables");
-			for (var i = 0; i < varsProp.arraySize; i++)
-			{
-				if (varsProp.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue != selected.Name)
-					continue;
+			var newSelectionIndex = -1;
 
-				varsProp.DeleteArrayElementAtIndex(i);
-				break;
+			foreach (var index in _listView.selectedIndices)
+			{
+				if (newSelectionIndex < 0)
+					newSelectionIndex = index;
+
+				var selected = _viewRows[index];
+				for (var i = 0; i < varsProp.arraySize; i++)
+				{
+					if (varsProp.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue != selected.Name)
+						continue;
+
+					varsProp.DeleteArrayElementAtIndex(i);
+					break;
+				}
 			}
+
 			so.ApplyModifiedProperties();
-			_lastSelectedIndex = -1;
+			_listView.ClearSelection();
 			Refresh();
+
+			if (newSelectionIndex >= _viewRows.Count)
+				newSelectionIndex = _viewRows.Count - selectedItemsCount;
+			if (newSelectionIndex >= 0)
+			{
+				_listView.SetSelection(newSelectionIndex);
+				_listView.ScrollToItem(newSelectionIndex);
+			}
 		}
 
 		private void OnColumnSortingChanged()
@@ -436,11 +484,10 @@ namespace LunyScript.UnityEditor
 				_table.OnVariableChanged -= OnVariableChanged;
 		}
 
-		private void OnDisable()
+		private void EnsureCellInputSelectsRow(VisualElement element, Int32 index) => element.RegisterCallback<PointerDownEvent>(evt =>
 		{
-			UnsubscribeFromTable();
-			_lastSelectedIndex = -1;
-			_focusedRowName = null;
-		}
+			if (_listView.selectedIndex != index)
+				_listView.SetSelection(index);
+		}, TrickleDown.TrickleDown);
 	}
 }

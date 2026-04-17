@@ -28,25 +28,35 @@ namespace LunyScript.Unity
 		/// </summary>
 		internal IReadOnlyList<InspectorVariable> Variables => _variables;
 
+		private static String EnsureUniqueName(InspectorVariable v, Table table)
+		{
+			var renameCount = 0;
+			var uniqueName = v.Name.Trim();
+			while (table.Has(uniqueName))
+			{
+				uniqueName = $"{v.Name} ({++renameCount})";
+			}
+
+			if (v.Name != uniqueName)
+				v.Name = uniqueName;
+
+			return uniqueName;
+		}
+
 		private void Awake()
 		{
 			ResetTable(); // ensure table gets rebuilt in playmode
 			RegisterScriptInstantiated();
 		}
 
-		private void OnEnable()
-		{
-			if (_table != null && _table.Has("InspectorValue"))
-			{
-				var v = _table["InspectorValue"];
-				LunyLogger.LogWarning(v);
-			}
-		}
-
 		private void OnDestroy() => UnregisterScriptInstantiated();
 
 		private void OnScriptInstantiated(ScriptRuntimeContext ctx)
 		{
+			if (ctx.LunyObject.NativeObjectId != (Int64)gameObject.GetEntityId())
+				return;
+
+			LunyLogger.LogWarning($"Script instantiated: {ctx}", this);
 			UnregisterScriptInstantiated();
 
 			if (ctx is ScriptRuntimeContext runtimeContext)
@@ -57,15 +67,6 @@ namespace LunyScript.Unity
 				if (table != null)
 					runtimeContext.SetLocalVariables(table);
 			}
-
-			RegisterScriptBuilt();
-		}
-
-		private void OnScriptBuilt(ScriptRuntimeContext ctx)
-		{
-			UnregisterScriptBuilt();
-
-			LunyLogger.LogInfo($"Table after build: {_table}", ctx.LunyObject);
 		}
 
 		private void RegisterScriptInstantiated()
@@ -79,19 +80,6 @@ namespace LunyScript.Unity
 			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
 			if (scriptEngine != null)
 				scriptEngine.OnScriptInstantiated -= OnScriptInstantiated;
-		}
-
-		private void RegisterScriptBuilt()
-		{
-			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
-			scriptEngine.OnScriptBuilt += OnScriptBuilt;
-		}
-
-		private void UnregisterScriptBuilt()
-		{
-			var scriptEngine = (IScriptEngineInternal)ScriptEngine.Instance;
-			if (scriptEngine != null)
-				scriptEngine.OnScriptBuilt -= OnScriptBuilt;
 		}
 
 		internal void ResetTable() => _table = null;
@@ -109,21 +97,6 @@ namespace LunyScript.Unity
 			}
 
 			return table;
-		}
-
-		private static String EnsureUniqueName(InspectorVariable v, Table table)
-		{
-			var renameCount = 0;
-			var uniqueName = v.Name.Trim();
-			while (table.Has(uniqueName))
-			{
-				uniqueName = $"{v.Name} ({++renameCount})";
-			}
-
-			if (v.Name != uniqueName)
-				v.Name = uniqueName;
-
-			return uniqueName;
 		}
 
 		/// <summary>

@@ -445,6 +445,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 964606965}
+  - component: {fileID: 964606967}
   - component: {fileID: 964606966}
   m_Layer: 0
   m_Name: Variable_Comparisons_SmokeTest
@@ -481,21 +482,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
-  - Name: newVar
+  - Name: InspectorValue
     Type: 0
     BoolValue: 0
-    NumberValue: 0
+    NumberValue: 999
     TextValue: 
-  - Name: newVar (1)
-    Type: 0
-    BoolValue: 0
-    NumberValue: 0
-    TextValue: 
-  - Name: newVar (2)
-    Type: 0
-    BoolValue: 0
-    NumberValue: 0
-    TextValue: 
+--- !u!114 &964606967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964606964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eafc1c54c3d4261a826a028f16a91e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptBehaviour
 --- !u!1 &1669966022
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,23 +550,13 @@ MonoBehaviour:
     BoolValue: 0
     NumberValue: 33
     TextValue: 
-  - Name: sdasd
-    Type: 2
-    BoolValue: 0
-    NumberValue: 0
-    TextValue: xss
   - Name: newVar
     Type: 0
-    BoolValue: 1
-    NumberValue: 4
-    TextValue: 4
-  - Name: newVar (1)
-    Type: 3
     BoolValue: 0
     NumberValue: 0
-    TextValue: dd
+    TextValue: 
   - Name: newVar (2)
-    Type: 1
+    Type: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
@@ -572,10 +565,30 @@ MonoBehaviour:
     BoolValue: 0
     NumberValue: 0
     TextValue: 
-  - Name: sdfsfsdfsdf
+  - Name: newVar (4)
     Type: 0
     BoolValue: 0
-    NumberValue: 4
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (5)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (6)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (8)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: newVar (1)
+    Type: 0
+    BoolValue: 0
+    NumberValue: 0
     TextValue: 
 --- !u!114 &1669966025
 MonoBehaviour:
