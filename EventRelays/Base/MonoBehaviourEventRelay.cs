@@ -6,14 +6,14 @@ namespace LunyScript.Unity.EventRelays
 	internal abstract class MonoBehaviourEventRelay : MonoBehaviour
 	{
 		protected ScriptRuntimeContext _runtimeContext;
-		protected LunyObject _lunyObject;
+		protected LunyGameObject _lunyGameObject;
 
 		internal void Initialize(ScriptRuntimeContext runtimeContext)
 		{
-			_lunyObject = (LunyObject)runtimeContext.LunyObject;
-			_lunyObject.OnDestroyed += OnLunyObjectDestroy;
+			_lunyGameObject = (LunyGameObject)runtimeContext.LunyGameObject;
+			_lunyGameObject.OnDestroyed += OnLunyGameObjectDestroy;
 		}
 
-		private void OnLunyObjectDestroy() => _lunyObject = null;
+		private void OnLunyGameObjectDestroy() => _lunyGameObject = null;
 	}
 }

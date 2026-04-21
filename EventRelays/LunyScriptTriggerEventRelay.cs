@@ -13,21 +13,21 @@ namespace LunyScript.Unity.EventRelays
 		private void OnTriggerEnter(Collider other)
 		{
 			_otherCollider.SetNativeCollider(other);
-			_lunyObject.InvokeOnTriggerEntered(_otherCollider);
+			_lunyGameObject.InvokeOnTriggerEntered(_otherCollider);
 			_otherCollider.SetNativeCollider(null);
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
 			_otherCollider.SetNativeCollider(other);
-			_lunyObject.InvokeOnTriggerExited(_otherCollider);
+			_lunyGameObject.InvokeOnTriggerExited(_otherCollider);
 			_otherCollider.SetNativeCollider(null);
 		}
 
 		private void OnTriggerStay(Collider other)
 		{
 			_otherCollider.SetNativeCollider(other);
-			_lunyObject.InvokeOnTriggerUpdate(_otherCollider);
+			_lunyGameObject.InvokeOnTriggerUpdate(_otherCollider);
 			_otherCollider.SetNativeCollider(null);
 		}
 	}

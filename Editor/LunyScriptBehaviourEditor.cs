@@ -5,14 +5,27 @@ using UnityEngine.UIElements;
 
 namespace LunyScript.UnityEditor
 {
-	[CustomEditor(typeof(LunyScriptBehaviour))]
+	[CustomEditor(typeof(LunyScriptBehaviour), true, isFallback = true)]
 	public class LunyScriptBehaviourEditor : Editor
 	{
 		public override VisualElement CreateInspectorGUI()
 		{
 			var root = new VisualElement();
 
+			InspectorElement.FillDefaultInspector(root, serializedObject, this);
+
+			/*
+			var scriptProp = serializedObject.FindProperty("m_Script");
+			if (scriptProp != null)
+			{
+				var scriptField = new PropertyField(scriptProp);
+				scriptField.SetEnabled(false);
+				root.Add(scriptField);
+			}
+			*/
+
 			// Flatten the nested Data elements
+			/*
 			var dataProp = serializedObject.FindProperty("_data");
 			if (dataProp != null)
 			{
@@ -31,6 +44,7 @@ namespace LunyScript.UnityEditor
 			}
 			else
 				root.Add(new Label("Could not find _data property."));
+				*/
 
 			return root;
 		}

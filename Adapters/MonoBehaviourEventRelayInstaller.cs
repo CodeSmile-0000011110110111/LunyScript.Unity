@@ -35,7 +35,7 @@ namespace LunyScript.Unity.Adapters
 
 			GameObject gameObject = null;
 			if (hasCollisionEvents || hasTriggerEvents || hasCollision2DEvents || hasTrigger2DEvents)
-				gameObject = (GameObject)runtimeContext.LunyObject.NativeObject;
+				gameObject = (GameObject)runtimeContext.LunyGameObject.NativeObject;
 
 			if (hasCollisionEvents)
 				gameObject.AddComponent<LunyScriptCollisionEventRelay>().Initialize(runtimeContext);

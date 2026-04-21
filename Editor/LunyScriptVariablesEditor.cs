@@ -75,19 +75,10 @@ namespace LunyScript.UnityEditor
 			_btnAdd.clicked += OnAddClicked;
 			_btnRemove.clicked += OnRemoveClicked;
 
-			// Play-mode: refresh every 500ms to pick up script-defined variables
-			_root.schedule.Execute(OnEditorUpdate).Every(500);
-
 			// Edit-mode: detect external changes (e.g. Reset()) via serialized object tracking
 			_root.TrackSerializedObjectValue(serializedObject, OnSerializedObjectChanged);
 
 			return _root;
-		}
-
-		private void OnEditorUpdate()
-		{
-			// if (Application.isPlaying)
-			// 	Refresh();
 		}
 
 		private void OnSerializedObjectChanged(SerializedObject so)
@@ -109,7 +100,7 @@ namespace LunyScript.UnityEditor
 				component.ResetTable();
 			_table = component.Table;
 
-			Debug.Log($"Table: {_table} Target: {component.name} ({component.GetEntityId()}) on {component.gameObject.name} ({component.gameObject.GetEntityId()})");
+			// Debug.Log($"Table: {_table} Target: {component.name} ({component.GetEntityId()}) on {component.gameObject.name} ({component.gameObject.GetEntityId()})");
 
 			if (_table != null)
 			{
@@ -254,10 +245,10 @@ namespace LunyScript.UnityEditor
 			for (var i = 0; i < varsProp.arraySize; i++)
 			{
 				var elem = varsProp.GetArrayElementAtIndex(i);
-				if (elem.FindPropertyRelative("Name").stringValue != row.Name)
+				if (elem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue != row.Name)
 					continue;
 
-				elem.FindPropertyRelative("Name").stringValue = evt.newValue;
+				elem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue = evt.newValue;
 				break;
 			}
 			so.ApplyModifiedProperties();
@@ -301,7 +292,7 @@ namespace LunyScript.UnityEditor
 					df.RegisterValueChangedCallback(evt => varHandle.Variable = evt.newValue);
 					valueElement = df;
 					break;
-				default: // String
+				case Variable.ValueType.String:
 					var tf = new TextField { style = { flexGrow = 1 } };
 					tf.SetValueWithoutNotify(variable.AsString());
 					tf.SetEnabled(!row.IsConstant);
@@ -313,12 +304,30 @@ namespace LunyScript.UnityEditor
 					});
 					tf.RegisterValueChangedCallback(evt =>
 					{
-						Debug.Log(
-							$"[DEBUG_LOG] TextField value changed — name={row.Name}, newValue={evt.newValue}, focusController={tf.focusController != null}");
 						varHandle.Variable = evt.newValue;
 					});
 					valueElement = tf;
 					break;
+				case Variable.ValueType.Object:
+					var pf = new ObjectField { style = { flexGrow = 1 } };
+					pf.objectType = typeof(GameObject);
+					pf.allowSceneObjects = true;
+					pf.SetValueWithoutNotify(variable.As<UnityEngine.Object>());
+					pf.SetEnabled(!row.IsConstant);
+					pf.RegisterCallback<FocusInEvent>(_ => _focusedRowName = row.Name);
+					pf.RegisterCallback<FocusOutEvent>(_ =>
+					{
+						_focusedRowName = null;
+						SyncToInspectorVariable(row.Name, varHandle.Variable);
+					});
+					pf.RegisterValueChangedCallback(evt =>
+					{
+						varHandle.Variable = Variable.FromObject(evt.newValue);
+					});
+					valueElement = pf;
+					break;
+				default: // Object
+					throw new ArgumentOutOfRangeException(nameof(variable.Type), $"unhandled variable type: {variable.Type}");
 			}
 
 			container.Add(valueElement);
@@ -354,13 +363,15 @@ namespace LunyScript.UnityEditor
 				for (var i = 0; i < varsProp.arraySize; i++)
 				{
 					var elem = varsProp.GetArrayElementAtIndex(i);
-					if (elem.FindPropertyRelative("Name").stringValue != row.Name)
+					if (elem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue != row.Name)
 						continue;
 
-					elem.FindPropertyRelative("Type").enumValueIndex = (Int32)newType;
-					elem.FindPropertyRelative("BoolValue").boolValue = false;
-					elem.FindPropertyRelative("NumberValue").doubleValue = 0.0;
-					elem.FindPropertyRelative("TextValue").stringValue = String.Empty;
+					Debug.Log($"set var type: {newType} ({(Int32)newType})");
+					elem.FindPropertyRelative(nameof(InspectorVariable.Type)).enumValueIndex = (Int32)newType;
+					elem.FindPropertyRelative(nameof(InspectorVariable.BoolValue)).boolValue = false;
+					elem.FindPropertyRelative(nameof(InspectorVariable.NumberValue)).doubleValue = 0.0;
+					elem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = String.Empty;
+					//elem.FindPropertyRelative(nameof(InspectorVariable.UnityObject)).objectReferenceValue = null;
 					break;
 				}
 				so.ApplyModifiedProperties();
@@ -382,20 +393,26 @@ namespace LunyScript.UnityEditor
 			for (var i = 0; i < varsProp.arraySize; i++)
 			{
 				var elem = varsProp.GetArrayElementAtIndex(i);
-				if (elem.FindPropertyRelative("Name").stringValue != name)
+				if (elem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue != name)
 					continue;
 
 				switch (variable.Type)
 				{
 					case Variable.ValueType.Boolean:
-						elem.FindPropertyRelative("BoolValue").boolValue = variable.AsBoolean();
+						elem.FindPropertyRelative(nameof(InspectorVariable.BoolValue)).boolValue = variable.AsBoolean();
 						break;
 					case Variable.ValueType.Number:
-						elem.FindPropertyRelative("NumberValue").doubleValue = variable.AsDouble();
+						elem.FindPropertyRelative(nameof(InspectorVariable.NumberValue)).doubleValue = variable.AsDouble();
 						break;
+					case Variable.ValueType.String:
+						elem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = variable.AsString();
+						break;
+					// case Variable.ValueType.Object:
+					// 	elem.FindPropertyRelative(nameof(InspectorVariable.UnityObject)).objectReferenceValue =
+					// 		variable.As<UnityEngine.Object>();
+					// 	break;
 					default:
-						elem.FindPropertyRelative("TextValue").stringValue = variable.AsString();
-						break;
+						throw new ArgumentOutOfRangeException(nameof(variable.Type), $"unhandled variable type: {variable.Type}");
 				}
 				break;
 			}
@@ -409,11 +426,12 @@ namespace LunyScript.UnityEditor
 			var varsProp = so.FindProperty("_variables");
 			varsProp.InsertArrayElementAtIndex(varsProp.arraySize);
 			var newElem = varsProp.GetArrayElementAtIndex(varsProp.arraySize - 1);
-			newElem.FindPropertyRelative("Name").stringValue = "newVar";
-			newElem.FindPropertyRelative("Type").enumValueIndex = (Int32)Variable.ValueType.Number;
-			newElem.FindPropertyRelative("BoolValue").boolValue = false;
-			newElem.FindPropertyRelative("NumberValue").doubleValue = 0.0;
-			newElem.FindPropertyRelative("TextValue").stringValue = String.Empty;
+			newElem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue = "New Var";
+			newElem.FindPropertyRelative(nameof(InspectorVariable.Type)).enumValueIndex = (Int32)Variable.ValueType.Number;
+			newElem.FindPropertyRelative(nameof(InspectorVariable.BoolValue)).boolValue = false;
+			newElem.FindPropertyRelative(nameof(InspectorVariable.NumberValue)).doubleValue = 0.0;
+			newElem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = String.Empty;
+			// newElem.FindPropertyRelative(nameof(InspectorVariable.UnityObject)).objectReferenceValue = null;
 			so.ApplyModifiedProperties();
 			Refresh();
 
@@ -441,7 +459,7 @@ namespace LunyScript.UnityEditor
 				var selected = _viewRows[index];
 				for (var i = 0; i < varsProp.arraySize; i++)
 				{
-					if (varsProp.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue != selected.Name)
+					if (varsProp.GetArrayElementAtIndex(i).FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue != selected.Name)
 						continue;
 
 					varsProp.DeleteArrayElementAtIndex(i);

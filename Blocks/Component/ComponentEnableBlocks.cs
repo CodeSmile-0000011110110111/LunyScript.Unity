@@ -42,7 +42,7 @@ namespace LunyScript.Unity.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var go = context.LunyObject.Cast<GameObject>();
+			var go = context.LunyGameObject.Cast<GameObject>();
 			SetComponentEnabled(go, _componentType, true);
 		}
 
@@ -61,7 +61,7 @@ namespace LunyScript.Unity.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var go = context.LunyObject.Cast<GameObject>();
+			var go = context.LunyGameObject.Cast<GameObject>();
 			ComponentEnableBlock.SetComponentEnabled(go, _componentType, false);
 		}
 

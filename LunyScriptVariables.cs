@@ -53,7 +53,7 @@ namespace LunyScript.Unity
 
 		private void OnScriptInstantiated(ScriptRuntimeContext ctx)
 		{
-			if (ctx.LunyObject.NativeObjectId != (Int64)gameObject.GetEntityId())
+			if (ctx.LunyGameObject.NativeObjectId != (Int64)gameObject.GetEntityId())
 				return;
 
 			LunyLogger.LogWarning($"Script instantiated: {ctx}", this);
