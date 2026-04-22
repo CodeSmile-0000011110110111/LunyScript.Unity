@@ -319,6 +319,16 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8340102614634978325, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
   m_PrefabInstance: {fileID: 572956134}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &572956137 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1698624399108938658, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
+  m_PrefabInstance: {fileID: 572956134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &572956138 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3210740861825211210, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
+  m_PrefabInstance: {fileID: 572956134}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &771135659
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +532,7 @@ GameObject:
   - component: {fileID: 1562448881}
   - component: {fileID: 1562448880}
   m_Layer: 0
-  m_Name: '__dev: enabling object references'
+  m_Name: Reference_FromInspector_SmokeTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,20 +570,9 @@ MonoBehaviour:
     NumberValue: 0
     TextValue: 
   _references:
-  - Name: _SK_Wep_Grenade_Clip_01
+  - Name: Alts
     RefType: 0
-    RefValue: {fileID: 102900000, guid: c165c9c382023824e81b6e20de122782, type: 3}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: _SK_Wep_Grenade_Pin_01
-    RefType: 0
-    RefValue: {fileID: 102900000, guid: c4429157bcc4b6b46a43ef7560399867, type: 3}
+    RefValue: {fileID: 102900000, guid: 174109dba2a1dec459193eee2f35aa03, type: 3}
     ColorValue: {r: 0, g: 0, b: 0, a: 0}
     CurveValue:
       serializedVersion: 2
@@ -593,9 +592,9 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Default Style Sheet
-    RefType: 2
-    RefValue: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
+  - Name: Floor
+    RefType: 1
+    RefValue: {fileID: 492154129}
     ColorValue: {r: 0, g: 0, b: 0, a: 0}
     CurveValue:
       serializedVersion: 2
@@ -604,20 +603,9 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: BloodSplat_FX
-    RefType: 3
-    RefValue: {fileID: 1562448879}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Alts
-    RefType: 0
-    RefValue: {fileID: 102900000, guid: 154fcbea4e88b4948838471c41f0859e, type: 3}
+  - Name: Floor
+    RefType: 1
+    RefValue: {fileID: 572956138}
     ColorValue: {r: 0, g: 0, b: 0, a: 0}
     CurveValue:
       serializedVersion: 2
@@ -628,7 +616,95 @@ MonoBehaviour:
     Vector3Value: {x: 0, y: 0, z: 0}
   - Name: Origin
     RefType: 1
+    RefValue: {fileID: 492154129}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Floor
+    RefType: 1
+    RefValue: {fileID: 492154129}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Variable_Arithmetics_SmokeTest
+    RefType: 1
+    RefValue: {fileID: 1669966022}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Y
+    RefType: 1
+    RefValue: {fileID: 572956137}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Origin
+    RefType: 1
+    RefValue: {fileID: 1562448879}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Origin
+    RefType: 1
+    RefValue: {fileID: 62912217}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Floor
+    RefType: 1
     RefValue: {fileID: 572956136}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: sdasd
+    RefType: 1
+    RefValue: {fileID: 492154129}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: 
+    RefType: 0
+    RefValue: {fileID: 0}
     ColorValue: {r: 0, g: 0, b: 0, a: 0}
     CurveValue:
       serializedVersion: 2
