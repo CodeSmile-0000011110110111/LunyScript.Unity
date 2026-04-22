@@ -247,6 +247,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5818434906106992667, guid: 095029928cfafe447a05dd805e756f26, type: 3}
   m_PrefabInstance: {fileID: 492154127}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &492154129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8330147873863997373, guid: 095029928cfafe447a05dd805e756f26, type: 3}
+  m_PrefabInstance: {fileID: 492154127}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &572956134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -307,6 +312,11 @@ PrefabInstance:
 --- !u!4 &572956135 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1624632257272051067, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
+  m_PrefabInstance: {fileID: 572956134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &572956136 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8340102614634978325, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
   m_PrefabInstance: {fileID: 572956134}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &771135659
@@ -483,11 +493,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
   - Name: InspectorValue
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 999
     TextValue: 
+  _references: []
 --- !u!114 &964606967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,8 +510,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eafc1c54c3d4261a826a028f16a91e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptBehaviour
-  _referenceKeys: []
-  _referenceValues: []
 --- !u!1 &1562448879
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,9 +540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ce0164ede39bd419b6d5f298f314de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomLunyScriptBehaviour
-  _referenceKeys: []
-  _referenceValues: []
-  _myField: 1
+  _myField: 0
 --- !u!114 &1562448881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,24 +554,100 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
-  - Name: newVar
-    VarValueType: 0
-    VarType: 0
-    BoolValue: 0
-    NumberValue: 0
-    TextValue: 
   - Name: New Var
-    VarValueType: 3
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
-  - Name: New Var (1)
-    VarValueType: 3
-    VarType: 0
-    BoolValue: 0
-    NumberValue: 0
-    TextValue: 
+  _references:
+  - Name: _SK_Wep_Grenade_Clip_01
+    RefType: 0
+    RefValue: {fileID: 102900000, guid: c165c9c382023824e81b6e20de122782, type: 3}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: _SK_Wep_Grenade_Pin_01
+    RefType: 0
+    RefValue: {fileID: 102900000, guid: c4429157bcc4b6b46a43ef7560399867, type: 3}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Floor
+    RefType: 1
+    RefValue: {fileID: 492154129}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Default Style Sheet
+    RefType: 2
+    RefValue: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: BloodSplat_FX
+    RefType: 3
+    RefValue: {fileID: 1562448879}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Alts
+    RefType: 0
+    RefValue: {fileID: 102900000, guid: 154fcbea4e88b4948838471c41f0859e, type: 3}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Origin
+    RefType: 1
+    RefValue: {fileID: 572956136}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: 
+    RefType: 0
+    RefValue: {fileID: 0}
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
 --- !u!4 &1562448882
 Transform:
   m_ObjectHideFlags: 0
@@ -628,59 +710,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
   - Name: InspectorValue
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 33
     TextValue: 
   - Name: newVar
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (2)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (3)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (4)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (5)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (6)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (8)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (1)
-    VarValueType: 0
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
+  _references: []
 --- !u!114 &1669966025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,8 +767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eafc1c54c3d4261a826a028f16a91e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptBehaviour
-  _referenceKeys: []
-  _referenceValues: []
 --- !u!1 &2102486125
 GameObject:
   m_ObjectHideFlags: 0

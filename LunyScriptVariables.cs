@@ -1,4 +1,5 @@
 ﻿using Luny;
+using Luny.Unity.Bridge;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +15,9 @@ namespace LunyScript.Unity
 	public sealed class LunyScriptVariables : MonoBehaviour
 	{
 		[SerializeField] private List<InspectorVariable> _variables = new();
+		[SerializeField] private List<InspectorReference> _references = new();
 
 		private Table _table;
-		//private WeakReference<ScriptRuntimeContext> _runtimeContextRef;
 
 		/// <summary>
 		/// The live Table — valid in edit-mode and after Awake in play-mode.
@@ -27,6 +28,11 @@ namespace LunyScript.Unity
 		/// Read-only access to the serialized variable descriptors (for Inspector rendering).
 		/// </summary>
 		internal IReadOnlyList<InspectorVariable> Variables => _variables;
+
+		/// <summary>
+		/// Read-only access to the serialized reference descriptors (for Inspector rendering).
+		/// </summary>
+		internal IReadOnlyList<InspectorReference> References => _references;
 
 		private static String EnsureUniqueName(InspectorVariable v, Table table)
 		{
@@ -51,7 +57,7 @@ namespace LunyScript.Unity
 
 		private void OnDestroy() => UnregisterScriptInstantiated();
 
-		private void OnScriptInstantiated(ScriptRuntimeContext ctx)
+		private void OnScriptInstantiated(ScriptBuildContext buildContext, ScriptRuntimeContext ctx)
 		{
 			if (ctx.LunyGameObject.NativeObjectId != (Int64)gameObject.GetEntityId())
 				return;
@@ -59,14 +65,13 @@ namespace LunyScript.Unity
 			LunyLogger.LogWarning($"Script instantiated: {ctx}", this);
 			UnregisterScriptInstantiated();
 
-			if (ctx is ScriptRuntimeContext runtimeContext)
-			{
-				//_runtimeContextRef = new WeakReference<ScriptRuntimeContext>(runtimeContext);
+			var table = TryGetTable();
+			if (table != null)
+				ctx.SetLocalVariables(table);
 
-				var table = TryGetTable();
-				if (table != null)
-					runtimeContext.SetLocalVariables(table);
-			}
+			var refs = BuildEngineReferences();
+			if (refs != null)
+				buildContext.EngineReferences = refs;
 		}
 
 		private void RegisterScriptInstantiated()
@@ -110,6 +115,42 @@ namespace LunyScript.Unity
 
 			_table ??= BuildTable();
 			return _table;
+		}
+
+		private EngineReferences BuildEngineReferences()
+		{
+			if (_references.Count == 0)
+				return null;
+
+			var refs = new EngineReferences(
+				gameObjectFactory: obj => UnityGameObject.ToLunyObject(obj),
+				componentFactory: obj => throw new NotImplementedException("Component factory")
+			);
+
+			foreach (var r in _references)
+			{
+				if (String.IsNullOrEmpty(r.Name))
+					continue;
+
+				switch (r.RefType)
+				{
+					case EngineReferenceType.Color:
+						refs.Add(r.Name, r.ColorValue, r.RefType);
+						break;
+					case EngineReferenceType.AnimationCurve:
+						refs.Add(r.Name, r.CurveValue, r.RefType);
+						break;
+					case EngineReferenceType.Vector3:
+						refs.Add(r.Name, r.Vector3Value, r.RefType);
+						break;
+					default:
+						if (r.RefValue != null)
+							refs.Add(r.Name, r.RefValue, r.RefType);
+						break;
+				}
+			}
+
+			return refs;
 		}
 	}
 }

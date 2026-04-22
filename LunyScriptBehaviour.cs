@@ -9,7 +9,7 @@ namespace LunyScript.Unity
 	[RequireComponent(typeof(LunyScriptVariables))]
 	public class LunyScriptBehaviour : MonoBehaviour
 	{
-		// TODO: proper key-value Inspector editor
+		/*// TODO: proper key-value Inspector editor
 		[SerializeField] private String[] _referenceKeys = Array.Empty<String>();
 		[SerializeField] private Object[] _referenceValues = Array.Empty<Object>();
 
@@ -39,7 +39,7 @@ namespace LunyScript.Unity
 				refs.Add(key, value, nativeId, isSceneRef);
 			}
 			return true;
-		}
+		}*/
 	}
 
 	// TODO: this belongs in LunyScript or Luny layer, with reference to UnityGameObject removed

@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Packages/de.codesmile.lunyscript/LunyScript.Unity/UI/Documents/ScriptVariablesWindowStyles.uss?fileID=7433441132597879392&amp;guid=ceef48b9794b44788aa6de5569a80830&amp;type=3#ScriptVariablesWindowStyles"/>
     <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: column;">
         <ui:MultiColumnListView name="variables-list" show-alternating-row-backgrounds="ContentOnly" sorting-mode="Custom" fixed-item-height="18" horizontal-scrolling="true" selection-type="Multiple" style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Packages/de.codesmile.lunyscript/3rdParty/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf?fileID=12800000&amp;guid=19cf8533de8266741b6fec461827e098&amp;type=3#FiraCode-Regular&quot;); font-size: 11px;">
@@ -12,6 +12,19 @@
         <ui:VisualElement name="toolbar" style="flex-direction: row; justify-content: flex-end;">
             <ui:Button name="btn-add" text="+" tooltip="Add variable"/>
             <ui:Button name="btn-remove" text="-" tooltip="Remove selected variable"/>
+        </ui:VisualElement>
+        <ui:Label text="References" style="margin-top: 6px; margin-bottom: 2px; -unity-font-style: bold;"/>
+        <ui:MultiColumnListView name="references-list" show-alternating-row-backgrounds="ContentOnly" fixed-item-height="18" horizontal-scrolling="true" selection-type="Multiple" style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Packages/de.codesmile.lunyscript/3rdParty/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf?fileID=12800000&amp;guid=19cf8533de8266741b6fec461827e098&amp;type=3#FiraCode-Regular&quot;); font-size: 11px;">
+            <ui:Columns>
+                <ui:Column name="ref-name" title="Name" stretchable="true"/>
+                <ui:Column name="ref-value" title="Value" stretchable="true"/>
+                <ui:Column name="ref-type" title="Type" width="120"/>
+            </ui:Columns>
+        </ui:MultiColumnListView>
+        <ui:Label name="empty-refs-label" text="No references defined." style="display: none; margin-top: 2px;"/>
+        <ui:VisualElement name="refs-toolbar" style="flex-direction: row; justify-content: flex-end;">
+            <ui:Button name="btn-ref-add" text="+" tooltip="Add reference"/>
+            <ui:Button name="btn-ref-remove" text="-" tooltip="Remove selected reference"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
