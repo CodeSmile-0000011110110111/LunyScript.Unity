@@ -15,9 +15,12 @@ namespace LunyScript.UnityEditor
 
 public partial class $CLASSNAME$ : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
-		On.Ready(Debug.Log($""Hello, {nameof($CLASSNAME$)}""));
+		var hello = Var.Define(""hello"", ""Hello, "");
+		var world = Var.Define(""world"", nameof($CLASSNAME$));
+
+		On.Ready(Debug.Log(hello + world + ""!""));
 	}
 }";
 

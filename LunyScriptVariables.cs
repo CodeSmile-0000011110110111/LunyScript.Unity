@@ -37,7 +37,7 @@ namespace LunyScript.Unity
 		private static String EnsureUniqueName(InspectorVariable v, Table table)
 		{
 			var renameCount = 0;
-			var uniqueName = v.Name.Trim();
+			var uniqueName = v.Name;
 			while (table.Has(uniqueName))
 			{
 				uniqueName = $"{v.Name} ({++renameCount})";

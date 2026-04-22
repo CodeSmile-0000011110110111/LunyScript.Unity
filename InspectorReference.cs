@@ -1,6 +1,7 @@
 ﻿using Luny;
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LunyScript.Unity
 {
@@ -13,12 +14,15 @@ namespace LunyScript.Unity
 		public String Name;
 		public EngineReferenceType RefType;
 
-		// UnityEngine.Object — covers all Object subtypes
-		public UnityEngine.Object RefValue;
+		// catch-all for UnityEngine.Object subtypes
+		public Object RefValue;
+
+		// non-UnityEngine.Object reference types
+		public AnimationCurve CurveValue;
 
 		// Value types — serialized explicitly
 		public Color ColorValue;
-		public AnimationCurve CurveValue;
+		public Vector2 Vector2Value;
 		public Vector3 Vector3Value;
 	}
 }

@@ -111,7 +111,7 @@ namespace LunyScript.UnityEditor
 
 			var elem = GetRefElemProp(index);
 			var refTypeProp = elem.FindPropertyRelative(nameof(InspectorReference.RefType));
-			var refType = (EngineReferenceType)refTypeProp.enumValueIndex;
+			var refType = (EngineReferenceType)refTypeProp.intValue;
 
 			VisualElement valueElement;
 
@@ -126,6 +126,11 @@ namespace LunyScript.UnityEditor
 					var curvef = new CurveField { style = { flexGrow = 1 } };
 					curvef.BindProperty(elem.FindPropertyRelative(nameof(InspectorReference.CurveValue)));
 					valueElement = curvef;
+					break;
+				case EngineReferenceType.Vector2:
+					var v2f = new Vector2Field { style = { flexGrow = 1 } };
+					v2f.BindProperty(elem.FindPropertyRelative(nameof(InspectorReference.Vector2Value)));
+					valueElement = v2f;
 					break;
 				case EngineReferenceType.Vector3:
 					var v3f = new Vector3Field { style = { flexGrow = 1 } };
@@ -173,7 +178,7 @@ namespace LunyScript.UnityEditor
 			container.Clear();
 
 			var refTypeProp = GetRefElemProp(index).FindPropertyRelative(nameof(InspectorReference.RefType));
-			var refType = (EngineReferenceType)refTypeProp.enumValueIndex;
+			var refType = (EngineReferenceType)refTypeProp.intValue;
 
 			if (Application.isPlaying)
 			{
@@ -188,7 +193,7 @@ namespace LunyScript.UnityEditor
 				var so = serializedObject;
 				so.Update();
 				var elem = GetRefElemProp(index);
-				elem.FindPropertyRelative(nameof(InspectorReference.RefType)).enumValueIndex = (Int32)newType;
+				elem.FindPropertyRelative(nameof(InspectorReference.RefType)).intValue = (Int32)newType;
 				elem.FindPropertyRelative(nameof(InspectorReference.RefValue)).objectReferenceValue = null;
 				so.ApplyModifiedProperties();
 				RefreshReferences();
@@ -206,7 +211,7 @@ namespace LunyScript.UnityEditor
 			refsProp.InsertArrayElementAtIndex(refsProp.arraySize);
 			var newElem = refsProp.GetArrayElementAtIndex(refsProp.arraySize - 1);
 			newElem.FindPropertyRelative(nameof(InspectorReference.Name)).stringValue = String.Empty;
-			newElem.FindPropertyRelative(nameof(InspectorReference.RefType)).enumValueIndex = (Int32)EngineReferenceType.Object;
+			newElem.FindPropertyRelative(nameof(InspectorReference.RefType)).intValue = (Int32)EngineReferenceType.Object;
 			newElem.FindPropertyRelative(nameof(InspectorReference.RefValue)).objectReferenceValue = null;
 			so.ApplyModifiedProperties();
 			RefreshReferences();

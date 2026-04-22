@@ -247,11 +247,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5818434906106992667, guid: 095029928cfafe447a05dd805e756f26, type: 3}
   m_PrefabInstance: {fileID: 492154127}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &492154129 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8330147873863997373, guid: 095029928cfafe447a05dd805e756f26, type: 3}
-  m_PrefabInstance: {fileID: 492154127}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &572956134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -312,21 +307,6 @@ PrefabInstance:
 --- !u!4 &572956135 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1624632257272051067, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
-  m_PrefabInstance: {fileID: 572956134}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &572956136 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8340102614634978325, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
-  m_PrefabInstance: {fileID: 572956134}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &572956137 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1698624399108938658, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
-  m_PrefabInstance: {fileID: 572956134}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &572956138 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3210740861825211210, guid: c51abf21d73881e44b679eb9eca4fcdd, type: 3}
   m_PrefabInstance: {fileID: 572956134}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &771135659
@@ -420,13 +400,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771135659}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18526366, y: 0.8145841, z: -0.37984675, w: 0.39729926}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: -0.035734817, y: 0.045333937, z: 0.0016227077, w: 0.9983312}
+  m_LocalPosition: {x: 1, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 62912218}
-  m_LocalEulerAnglesHint: {x: 50, y: 128, z: 0}
+  m_LocalEulerAnglesHint: {x: -4.1, y: 5.2, z: 0}
 --- !u!114 &771135662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,7 +510,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1562448882}
   - component: {fileID: 1562448881}
-  - component: {fileID: 1562448880}
   m_Layer: 0
   m_Name: Reference_FromInspector_SmokeTest
   m_TagString: Untagged
@@ -538,19 +517,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1562448880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562448879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ce0164ede39bd419b6d5f298f314de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomLunyScriptBehaviour
-  _myField: 0
 --- !u!114 &1562448881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,165 +530,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
-  - Name: New Var
+  - Name: cube rotation speed
+    VarType: 0
+    BoolValue: 0
+    NumberValue: 444
+    TextValue: 
+  - Name: 
     VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   _references:
-  - Name: Alts
-    RefType: 0
-    RefValue: {fileID: 102900000, guid: 174109dba2a1dec459193eee2f35aa03, type: 3}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Floor
+  - Name: cube reference
     RefType: 1
-    RefValue: {fileID: 492154129}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    RefValue: {fileID: 1853021869}
     CurveValue:
       serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Floor
-    RefType: 1
-    RefValue: {fileID: 492154129}
     ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Floor
-    RefType: 1
-    RefValue: {fileID: 572956138}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Origin
-    RefType: 1
-    RefValue: {fileID: 492154129}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Floor
-    RefType: 1
-    RefValue: {fileID: 492154129}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Variable_Arithmetics_SmokeTest
-    RefType: 1
-    RefValue: {fileID: 1669966022}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Y
-    RefType: 1
-    RefValue: {fileID: 572956137}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Origin
-    RefType: 1
-    RefValue: {fileID: 1562448879}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Origin
-    RefType: 1
-    RefValue: {fileID: 62912217}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: Floor
-    RefType: 1
-    RefValue: {fileID: 572956136}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: sdasd
-    RefType: 1
-    RefValue: {fileID: 492154129}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: 
-    RefType: 0
-    RefValue: {fileID: 0}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-    Vector3Value: {x: 0, y: 0, z: 0}
-  - Name: 
-    RefType: 0
-    RefValue: {fileID: 0}
-    ColorValue: {r: 0, g: 0, b: 0, a: 0}
-    CurveValue:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
+    Vector2Value: {x: 0, y: 0}
     Vector3Value: {x: 0, y: 0, z: 0}
 --- !u!4 &1562448882
 Transform:
@@ -843,6 +672,146 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eafc1c54c3d4261a826a028f16a91e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptBehaviour
+--- !u!1 &1853021869
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1853021874}
+  - component: {fileID: 1853021873}
+  - component: {fileID: 1853021872}
+  - component: {fileID: 1853021871}
+  - component: {fileID: 1853021870}
+  m_Layer: 0
+  m_Name: Rotating Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!54 &1853021870
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853021869}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1853021871
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853021869}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1853021872
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853021869}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a991cc27b380323439744a690ea56434, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1853021873
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853021869}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1853021874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853021869}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.35355338, y: -0.1464466, z: 0.35355338, w: 0.8535535}
+  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 45}
 --- !u!1 &2102486125
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,8 +898,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102486125}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.012182733, y: 0.13545284, z: -0.001771877, w: -0.99070734}
-  m_LocalPosition: {x: 2.5056622, y: 2.0316827, z: -3.248549}
+  m_LocalRotation: {x: -0.056359142, y: 0.17685074, z: -0.011094475, w: -0.98256016}
+  m_LocalPosition: {x: 2.4180171, y: 1.5125637, z: -4.090014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -989,3 +958,4 @@ SceneRoots:
   - {fileID: 1669966023}
   - {fileID: 964606965}
   - {fileID: 1562448882}
+  - {fileID: 1853021874}
