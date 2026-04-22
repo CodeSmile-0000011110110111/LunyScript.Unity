@@ -1,8 +1,10 @@
 ﻿using Luny;
+using Luny.Engine.Bridge;
 using Luny.Unity.Bridge;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = System.Object;
 
 namespace LunyScript.Unity
 {
@@ -62,7 +64,6 @@ namespace LunyScript.Unity
 			if (ctx.LunyGameObject.NativeObjectId != (Int64)gameObject.GetEntityId())
 				return;
 
-			LunyLogger.LogWarning($"Script instantiated: {ctx}", this);
 			UnregisterScriptInstantiated();
 
 			var table = TryGetTable();
@@ -122,10 +123,14 @@ namespace LunyScript.Unity
 			if (_references.Count == 0)
 				return null;
 
-			var refs = new EngineReferences(
-				gameObjectFactory: obj => UnityGameObject.ToLunyObject(obj),
-				componentFactory: obj => throw new NotImplementedException("Component factory")
-			);
+			var factories = new Dictionary<Type, Func<Object, Object>>
+			{
+				{ typeof(LunyGameObject), obj => obj is GameObject go ? UnityGameObject.ToLuny(go) : null },
+				{ typeof(LunyTransform), obj => obj is Transform t ? UnityGameObject.ToLuny(t.gameObject).Transform : null },
+				{ typeof(LunyComponent), obj => throw new NotImplementedException("Component factory") },
+			};
+
+			var refs = new EngineReferences(factories);
 
 			foreach (var r in _references)
 			{

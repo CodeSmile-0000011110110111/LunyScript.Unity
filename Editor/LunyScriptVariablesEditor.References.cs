@@ -140,8 +140,7 @@ namespace LunyScript.UnityEditor
 				default:
 					var objField = new ObjectField { style = { flexGrow = 1 } };
 					objField.objectType = GetObjectTypeForRefType(refType);
-					objField.allowSceneObjects = refType == EngineReferenceType.GameObject ||
-					                             refType == EngineReferenceType.Component;
+					objField.allowSceneObjects = (Int32)refType < (Int32)EngineReferenceType.ScriptableObject;
 					objField.BindProperty(elem.FindPropertyRelative(nameof(InspectorReference.RefValue)));
 					objField.RegisterValueChangedCallback(evt => AutoFillRefName(index, evt.previousValue, evt.newValue));
 					valueElement = objField;

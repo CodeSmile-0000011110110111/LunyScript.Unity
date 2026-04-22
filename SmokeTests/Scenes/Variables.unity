@@ -400,13 +400,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771135659}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.035734817, y: 0.045333937, z: 0.0016227077, w: 0.9983312}
+  m_LocalRotation: {x: 0.013658431, y: -0.6224198, z: 0.010864405, w: 0.78248894}
   m_LocalPosition: {x: 1, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 62912218}
-  m_LocalEulerAnglesHint: {x: -4.1, y: 5.2, z: 0}
+  m_LocalEulerAnglesHint: {x: 2, y: -77, z: 0}
 --- !u!114 &771135662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,6 +544,30 @@ MonoBehaviour:
   - Name: cube reference
     RefType: 1
     RefValue: {fileID: 1853021869}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Default Style Sheet
+    RefType: 10000
+    RefValue: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
+    CurveValue:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
+  - Name: Rotating Cube Transform
+    RefType: 5000
+    RefValue: {fileID: 1853021874}
     CurveValue:
       serializedVersion: 2
       m_Curve: []
