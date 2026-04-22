@@ -310,7 +310,7 @@ namespace LunyScript.UnityEditor
 					break;
 				case Variable.ValueType.Object:
 					var pf = new ObjectField { style = { flexGrow = 1 } };
-					pf.objectType = typeof(GameObject);
+					pf.objectType = typeof(UnityEngine.Object);
 					pf.allowSceneObjects = true;
 					pf.SetValueWithoutNotify(variable.As<UnityEngine.Object>());
 					pf.SetEnabled(!row.IsConstant);
@@ -367,7 +367,7 @@ namespace LunyScript.UnityEditor
 						continue;
 
 					Debug.Log($"set var type: {newType} ({(Int32)newType})");
-					elem.FindPropertyRelative(nameof(InspectorVariable.Type)).enumValueIndex = (Int32)newType;
+					elem.FindPropertyRelative(nameof(InspectorVariable.VarValueType)).enumValueIndex = (Int32)newType;
 					elem.FindPropertyRelative(nameof(InspectorVariable.BoolValue)).boolValue = false;
 					elem.FindPropertyRelative(nameof(InspectorVariable.NumberValue)).doubleValue = 0.0;
 					elem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = String.Empty;
@@ -407,10 +407,10 @@ namespace LunyScript.UnityEditor
 					case Variable.ValueType.String:
 						elem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = variable.AsString();
 						break;
-					// case Variable.ValueType.Object:
-					// 	elem.FindPropertyRelative(nameof(InspectorVariable.UnityObject)).objectReferenceValue =
-					// 		variable.As<UnityEngine.Object>();
-					// 	break;
+					case Variable.ValueType.Object:
+						elem.FindPropertyRelative(nameof(InspectorVariable.ReferenceValue)).objectReferenceValue =
+							variable.As<UnityEngine.Object>();
+						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(variable.Type), $"unhandled variable type: {variable.Type}");
 				}
@@ -427,7 +427,7 @@ namespace LunyScript.UnityEditor
 			varsProp.InsertArrayElementAtIndex(varsProp.arraySize);
 			var newElem = varsProp.GetArrayElementAtIndex(varsProp.arraySize - 1);
 			newElem.FindPropertyRelative(nameof(InspectorVariable.Name)).stringValue = "New Var";
-			newElem.FindPropertyRelative(nameof(InspectorVariable.Type)).enumValueIndex = (Int32)Variable.ValueType.Number;
+			newElem.FindPropertyRelative(nameof(InspectorVariable.VarValueType)).enumValueIndex = (Int32)Variable.ValueType.Number;
 			newElem.FindPropertyRelative(nameof(InspectorVariable.BoolValue)).boolValue = false;
 			newElem.FindPropertyRelative(nameof(InspectorVariable.NumberValue)).doubleValue = 0.0;
 			newElem.FindPropertyRelative(nameof(InspectorVariable.TextValue)).stringValue = String.Empty;

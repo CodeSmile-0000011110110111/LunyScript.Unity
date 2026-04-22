@@ -1,7 +1,6 @@
-﻿using Luny.Engine.Bridge;
-using Luny.Unity.Bridge;
+﻿using Luny;
+using Luny.Engine;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -43,42 +42,5 @@ namespace LunyScript.Unity
 		}
 	}
 
-	// TODO: this belongs in LunyScript or Luny layer
-	public sealed class EngineReferences
-	{
-		private Dictionary<String, EngineReference> _references = new();
-
-		internal void Add(String key, Object engineRef, Int64 nativeId, Boolean isSceneReference) => _references.Add(key, new EngineReference
-		{
-			Name = key,
-			Value = engineRef,
-			NativeId = nativeId,
-			IsSceneReference = isSceneReference,
-		});
-
-		public Boolean TryGet(String name, out ILunyGameObject obj)
-		{
-			obj = null;
-			if (!_references.TryGetValue(name, out var value))
-				return false;
-
-			// TODO: LunyObject should provide a static conversion method, but C# 9 doesn't support static overrides
-			// LunyObject has TryGetCached with registry lookup, this should be utilized
-			//
-			// could register the object with Luny registry here but should be avoided in case the object is never actually used
-			// though that's probably only a minor optimization
-			obj = UnityGameObject.ToLunyObject(value);
-			return true;
-		}
-	}
-
-	public record EngineReference
-	{
-		public String Name;
-		public Object Value;
-		public Int64 NativeId;
-		public Boolean IsSceneReference;
-
-		// TODO: this should provide getters for LunyObject
-	}
+	// TODO: this belongs in LunyScript or Luny layer, with reference to UnityGameObject removed
 }

@@ -16,7 +16,7 @@ namespace LunyScript.Unity
 		[SerializeField] private List<InspectorVariable> _variables = new();
 
 		private Table _table;
-		private WeakReference<ScriptRuntimeContext> _runtimeContextRef;
+		//private WeakReference<ScriptRuntimeContext> _runtimeContextRef;
 
 		/// <summary>
 		/// The live Table — valid in edit-mode and after Awake in play-mode.
@@ -61,7 +61,7 @@ namespace LunyScript.Unity
 
 			if (ctx is ScriptRuntimeContext runtimeContext)
 			{
-				_runtimeContextRef = new WeakReference<ScriptRuntimeContext>(runtimeContext);
+				//_runtimeContextRef = new WeakReference<ScriptRuntimeContext>(runtimeContext);
 
 				var table = TryGetTable();
 				if (table != null)

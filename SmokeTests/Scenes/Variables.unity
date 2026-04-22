@@ -483,7 +483,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
   - Name: InspectorValue
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 999
     TextValue: 
@@ -548,7 +549,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
   - Name: newVar
-    Type: 3
+    VarValueType: 0
+    VarType: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: New Var
+    VarValueType: 3
+    VarType: 0
+    BoolValue: 0
+    NumberValue: 0
+    TextValue: 
+  - Name: New Var (1)
+    VarValueType: 3
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
@@ -614,47 +628,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: LunyScript.Unity::LunyScript.Unity.LunyScriptVariables
   _variables:
   - Name: InspectorValue
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 33
     TextValue: 
   - Name: newVar
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (2)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (3)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (4)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (5)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (6)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (8)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
   - Name: newVar (1)
-    Type: 0
+    VarValueType: 0
+    VarType: 0
     BoolValue: 0
     NumberValue: 0
     TextValue: 
