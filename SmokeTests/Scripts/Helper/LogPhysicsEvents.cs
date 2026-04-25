@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace LunyScript.SmokeTests
 {
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Collider))]
 	internal sealed class PhysicsEventLogger : MonoBehaviour

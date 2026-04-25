@@ -6,7 +6,8 @@ namespace LunyScript.SmokeTests
 	/// Typical Unity tutorial script implementing a 3-way motion relative to object's orientation
 	/// => 18 lines of code, 628 characters (excluding: empty lines, comments, namespace, usings)
 	/// </summary>
-	public class InputTransformMove_MonoBehaviour : MonoBehaviour
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
+	public sealed class InputTransformMove_MonoBehaviour : MonoBehaviour
 	{
 		private void Update()
 		{

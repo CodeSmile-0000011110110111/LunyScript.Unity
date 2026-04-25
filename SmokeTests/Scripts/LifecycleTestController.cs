@@ -7,6 +7,8 @@ using Object = System.Object;
 
 namespace LunyScript.SmokeTests
 {
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
+	[DisallowMultipleComponent]
 	internal sealed class LifecycleTestController : MonoBehaviour
 	{
 		[Header("Tests")]

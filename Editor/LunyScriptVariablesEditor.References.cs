@@ -22,13 +22,12 @@ namespace LunyScript.UnityEditor
 		{
 			EngineReferenceType.GameObject => typeof(GameObject),
 			EngineReferenceType.ScriptableObject => typeof(ScriptableObject),
-			EngineReferenceType.Component => typeof(Component),
-
-			EngineReferenceType.Transform => typeof(Transform),
-			EngineReferenceType.Rigidbody => typeof(Rigidbody),
 			EngineReferenceType.Material => typeof(Material),
-			EngineReferenceType.Mesh => typeof(Mesh),
-			EngineReferenceType.AudioClip => typeof(AudioClip),
+			// EngineReferenceType.Component => typeof(Component),
+			// EngineReferenceType.Transform => typeof(Transform),
+			// EngineReferenceType.Rigidbody => typeof(Rigidbody),
+			// EngineReferenceType.Mesh => typeof(Mesh),
+			// EngineReferenceType.AudioClip => typeof(AudioClip),
 			var _ => typeof(Object),
 		};
 

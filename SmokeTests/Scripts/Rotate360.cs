@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace LunyScript
 {
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
 	public sealed class Rotate360 : MonoBehaviour
 	{
 		[SerializeField] private Vector3 _angles;

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace LunyScript.SmokeTests
 {
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Renderer))]
 	internal sealed class ChangeMaterialOnContact : MonoBehaviour

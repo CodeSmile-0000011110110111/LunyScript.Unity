@@ -6,7 +6,8 @@ namespace LunyScript.SmokeTests
 	/// Typical Unity tutorial script implementing a 3-way world-axis-aligned motion
 	/// => 33 lines of code, 865 characters (excluding: empty lines, comments, namespace, usings)
 	/// </summary>
-	public class InputTransformShift_MonoBehaviour : MonoBehaviour
+	[AddComponentMenu("GameObject/")] // hide from "Add Component" menu
+	public sealed class InputTransformShift_MonoBehaviour : MonoBehaviour
 	{
 		private void Update()
 		{

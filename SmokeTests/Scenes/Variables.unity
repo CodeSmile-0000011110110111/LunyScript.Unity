@@ -566,7 +566,7 @@ MonoBehaviour:
     Vector2Value: {x: 0, y: 0}
     Vector3Value: {x: 0, y: 0, z: 0}
   - Name: Rotating Cube Transform
-    RefType: 5000
+    RefType: 5001
     RefValue: {fileID: 1853021874}
     CurveValue:
       serializedVersion: 2

@@ -22,11 +22,9 @@ namespace LunyScript.UnityEditor
 				scriptField.SetEnabled(false);
 				root.Add(scriptField);
 			}
-			*/
 
 			// Flatten the nested Data elements
-			/*
-			var dataProp = serializedObject.FindProperty("_data");
+			var dataProp = serializedObject.FindProperty("_array");
 			if (dataProp != null)
 			{
 				var child = dataProp.Copy();
@@ -42,9 +40,7 @@ namespace LunyScript.UnityEditor
 					} while (child.NextVisible(false) && !SerializedProperty.EqualContents(child, endProperty));
 				}
 			}
-			else
-				root.Add(new Label("Could not find _data property."));
-				*/
+			*/
 
 			return root;
 		}
