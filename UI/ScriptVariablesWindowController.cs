@@ -2,6 +2,7 @@
 using LunyScript.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = System.Object;
@@ -125,13 +126,22 @@ namespace LunyScript.UnityEditor.Diagnostics
 			if (_masterRows == null)
 				return;
 
+			bool foundRow = false;
 			foreach (var row in _masterRows)
 			{
 				if (row.HasName(args.Name))
 				{
+					foundRow = true;
 					row.FrameStamp = Time.frameCount;
 					break;
 				}
+			}
+
+			// new variables require a full refresh for now
+			if (!foundRow)
+			{
+				Refresh();
+				return;
 			}
 
 			for (var i = 0; i < _viewRows.Count; i++)
